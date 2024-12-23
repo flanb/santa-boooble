@@ -16,7 +16,8 @@ void main() {
 	float frame = mod(uTime * fps, totalFrames) / totalFrames;
 
 	// get the position from the texture
-	vec4 texturePos = texture(posTexture, vec2(uv1.x, uv1.y - frame));
+	float numWraps = 22.;
+	vec4 texturePos = texture(posTexture, vec2(uv1.x, 1. - uv1.y + (1. - frame) / numWraps));
 	vec4 textureNormal = texture(normalTexture, vec2(uv1.x, uv1.y - frame)) * 2.0 - 1.0;
 	vNormal = textureNormal.xzy;
 

@@ -12,31 +12,32 @@
 		"colorSpace": "srgb"
 	},
 	{
-		"name": "grassColorTexture",
-		"path": "textures/dirt/color.ktx2"
+		"name": "ballModel",
+		"path": "models/ball.glb"
 	},
 	{
-		"name": "grassNormalTexture",
-		"path": "textures/dirt/normal.jpg"
+		"name": "ballPositionTexture",
+		"path": "textures/ball_offsets.exr"
 	},
 	{
-		"name": "foxModel",
-		"path": "models/Fox/glTF/Fox.gltf"
+		"name": "ballNormalTexture",
+		"path": "textures/ball_normal.webp"
 	},
 	{
-		"name": "foxAudio",
-		"path": "audio/fox.mp3"
+		"name": "ballColorTexture",
+		"path": "textures/ball_color.webp",
+		"colorSpace": "srgb"
 	},
 	{
-		"name": "clothModel",
-		"path": "models/cloth.glb"
+		"name": "ballRoughnessTexture",
+		"path": "textures/ball_roughness.webp"
 	},
 	{
-		"name": "clothPositionTexture",
-		"path": "textures/offsets.exr"
+		"name": "ballDisplacementTexture",
+		"path": "textures/ball_displacement.webp"
 	},
 	{
-		"name": "clothNormalTexture",
-		"path": "textures/normals.png"
+		"name": "holderModel",
+		"path": "models/holder.glb"
 	}
 ]

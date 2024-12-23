@@ -8,6 +8,9 @@ body {
 	overflow: hidden;
 	font-family: sans-serif;
 	color: white;
+	/* rotation  -100deg #FFDEBF 0, #fff 0.4, #FFFADD 0.7 */
+	background: linear-gradient(40deg, #ffdebf 0, #fffcf0 40%, #fffadd 70%);
+	height: 100%;
 }
 
 #webgl {
