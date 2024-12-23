@@ -5,6 +5,7 @@ import fragmentShader from './fragmentShader.frag'
 import addObjectDebug from '@/webgl/utils/addObjectDebug'
 import { extendMaterial, getUniform, setUniform } from '@/webgl/utils/extendMaterial'
 import { MeshStandardMaterial } from 'three'
+import RAPIER from '@dimforge/rapier3d-compat'
 
 export default class VAT {
 	constructor() {
@@ -15,6 +16,7 @@ export default class VAT {
 		this.#createModel()
 		this.#createMaterial()
 		this.#createInteraction()
+		this.#createPhysics()
 		if (this.experience.debug.active) this.#createDebug()
 	}
 
@@ -90,6 +92,10 @@ export default class VAT {
 	}
 
 	#playAnim = () => {
+		this.scene.physicsWorld.removeCollider(this.collider)
+		this.scene.dynamicBodies.delete(this.model)
+		this.model.quaternion.set(0, 0, 0, 1)
+
 		const totalFrames = getUniform(this.material, 'totalFrames').value - 15
 		const fps = getUniform(this.material, 'fps').value
 		const duration = totalFrames / fps
@@ -105,11 +111,22 @@ export default class VAT {
 		requestAnimationFrame(animate)
 	}
 
+	#createPhysics() {
+		const cubeBody = this.scene.physicsWorld.createRigidBody(
+			RAPIER.RigidBodyDesc.dynamic().setTranslation(0, 5, 0).setCanSleep(false)
+		)
+		const cubeShape = RAPIER.ColliderDesc.cuboid(0.5, 0.5, 0.5)
+		this.collider = this.scene.physicsWorld.createCollider(cubeShape, cubeBody)
+		this.scene.dynamicBodies.set(this.model, cubeBody)
+	}
+
 	#createDebug() {
 		const debugFolder = addObjectDebug(this.experience.debug.ui, this.model)
 	}
 
 	update() {
+		console.log(this.model.quaternion)
+
 		// if (!this.material.userData.shader) return
 		// setUniform(this.material, 'uTime', this.experience.time.elapsed / 1000)
 	}
