@@ -92,7 +92,7 @@ export default class VAT {
 	}
 
 	#playAnim = () => {
-		this.scene.physicsWorld.removeCollider(this.collider)
+		// this.scene.physicsWorld.removeCollider(this.collider)
 		this.scene.dynamicBodies.delete(this.model)
 		this.model.quaternion.set(0, 0, 0, 1)
 
@@ -112,12 +112,30 @@ export default class VAT {
 	}
 
 	#createPhysics() {
-		const cubeBody = this.scene.physicsWorld.createRigidBody(
-			RAPIER.RigidBodyDesc.dynamic().setTranslation(0, 5, 0).setCanSleep(false)
+		const modelBody = this.scene.physicsWorld.createRigidBody(
+			RAPIER.RigidBodyDesc.dynamic().setTranslation(0, 0, 0).setCanSleep(false)
 		)
-		const cubeShape = RAPIER.ColliderDesc.cuboid(0.5, 0.5, 0.5)
-		this.collider = this.scene.physicsWorld.createCollider(cubeShape, cubeBody)
-		this.scene.dynamicBodies.set(this.model, cubeBody)
+		const modelShape = RAPIER.ColliderDesc.ball(1).setTranslation(-0.1, -0.2, 0)
+		this.collider = this.scene.physicsWorld.createCollider(modelShape, modelBody)
+		this.scene.dynamicBodies.set(this.model, modelBody)
+
+		const holderBody = this.scene.physicsWorld.createRigidBody(
+			RAPIER.RigidBodyDesc.dynamic().setTranslation(0, 0, 0).setCanSleep(false)
+		)
+		const holderShape = RAPIER.ColliderDesc.cuboid(0.3, 1.2, 0.1).setTranslation(0, 2.1, 0)
+		this.scene.physicsWorld.createCollider(holderShape, holderBody)
+		this.scene.dynamicBodies.set(this.holder, holderBody)
+
+		//joints
+
+		const baseBody = this.scene.physicsWorld.createRigidBody(
+			RAPIER.RigidBodyDesc.fixed().setTranslation(0, 3, 0).setCanSleep(false)
+		)
+		const fixedJoint = RAPIER.JointData.spherical({ x: 0.0, y: 0.0, z: 0.0 }, { x: 0.0, y: 3.0, z: 0.0 })
+		this.scene.physicsWorld.createImpulseJoint(fixedJoint, baseBody, holderBody)
+
+		const sphericalJoint = RAPIER.JointData.spherical({ x: 0.0, y: 1, z: 0 }, { x: 0.0, y: 1, z: 0.0 })
+		this.scene.physicsWorld.createImpulseJoint(sphericalJoint, modelBody, holderBody)
 	}
 
 	#createDebug() {
@@ -125,8 +143,6 @@ export default class VAT {
 	}
 
 	update() {
-		console.log(this.model.quaternion)
-
 		// if (!this.material.userData.shader) return
 		// setUniform(this.material, 'uTime', this.experience.time.elapsed / 1000)
 	}
