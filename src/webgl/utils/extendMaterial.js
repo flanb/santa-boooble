@@ -77,7 +77,6 @@ export function extendMaterial(material, { uniforms = {}, vertexShader = {}, fra
 					})
 				}
 			})
-			console.log(shader)
 
 			material.userData.shader = shader
 
