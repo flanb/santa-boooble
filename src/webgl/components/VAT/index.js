@@ -122,12 +122,11 @@ export default class VAT {
 		const holderBody = this.scene.physicsWorld.createRigidBody(
 			RAPIER.RigidBodyDesc.dynamic().setTranslation(0, 0, 0).setCanSleep(false)
 		)
-		const holderShape = RAPIER.ColliderDesc.cuboid(0.3, 1.2, 0.1).setTranslation(0, 2.1, 0)
+		const holderShape = RAPIER.ColliderDesc.cuboid(0.3, 1.25, 0.3).setTranslation(0, 2.1, 0)
 		this.scene.physicsWorld.createCollider(holderShape, holderBody)
 		this.scene.dynamicBodies.set(this.holder, holderBody)
 
 		//joints
-
 		const baseBody = this.scene.physicsWorld.createRigidBody(
 			RAPIER.RigidBodyDesc.fixed().setTranslation(0, 3, 0).setCanSleep(false)
 		)
@@ -136,6 +135,32 @@ export default class VAT {
 
 		const sphericalJoint = RAPIER.JointData.spherical({ x: 0.0, y: 1, z: 0 }, { x: 0.0, y: 1, z: 0.0 })
 		this.scene.physicsWorld.createImpulseJoint(sphericalJoint, modelBody, holderBody)
+
+		const mouseBody = this.scene.physicsWorld.createRigidBody(
+			RAPIER.RigidBodyDesc.fixed().setTranslation(0, 0, 0).setCanSleep(false)
+		)
+		const mouseShape = RAPIER.ColliderDesc.cuboid(0.1, 0.1, 2)
+		const mouseCollider = this.scene.physicsWorld.createCollider(mouseShape, mouseBody)
+
+		const bounds = new Vector3()
+		this.experience.camera.instance.getViewSize(10, bounds)
+
+		addEventListener('mousedown', (event) => {
+			//enable mouse physics
+			mouseCollider.setEnabled(true)
+		})
+
+		addEventListener('mouseup', (event) => {
+			mouseCollider.setEnabled(false)
+		})
+		addEventListener('mousemove', (event) => {
+			const x = (event.clientX / window.innerWidth) * 2 - 1
+			const y = -(event.clientY / window.innerHeight) * 2 + 1
+
+			const vector = new Vector3(x * (bounds.x / 2), y * (bounds.y / 2), 0)
+
+			mouseBody.setTranslation(vector)
+		})
 	}
 
 	#createDebug() {

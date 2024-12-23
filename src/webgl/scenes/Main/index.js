@@ -30,10 +30,9 @@ export default class Main {
 		this.scene.dynamicBodies = new Map()
 		this.scene.physicsWorld = new RAPIER.World(gravity)
 
-		// Create the ground
-		// const groundBody = this.scene.physicsWorld.createRigidBody(RAPIER.RigidBodyDesc.fixed().setTranslation(0, -1, 0))
-		// const groundShape = RAPIER.ColliderDesc.cuboid(10, 1, 10).setRestitution(1.1)
-		// this.scene.physicsWorld.createCollider(groundShape, groundBody)
+		const groundBody = this.scene.physicsWorld.createRigidBody(RAPIER.RigidBodyDesc.fixed().setTranslation(0, 6, 0))
+		const groundShape = RAPIER.ColliderDesc.cuboid(10, 1, 10)
+		this.scene.physicsWorld.createCollider(groundShape, groundBody)
 	}
 
 	#createDebug() {
