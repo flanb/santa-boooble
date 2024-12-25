@@ -1,11 +1,8 @@
-import { BoxGeometry, Mesh, ShaderMaterial, Vector3, NearestFilter, RGBAFormat, RepeatWrapping } from 'three'
-import Experience from 'core/Experience.js'
-import vertexShader from './vertexShader.vert'
-import fragmentShader from './fragmentShader.frag'
 import addObjectDebug from '@/webgl/utils/addObjectDebug'
 import { extendMaterial, getUniform, setUniform } from '@/webgl/utils/extendMaterial'
-import { MeshStandardMaterial } from 'three'
 import RAPIER from '@dimforge/rapier3d-compat'
+import Experience from 'core/Experience.js'
+import { Mesh, MeshStandardMaterial, Quaternion, Vector3 } from 'three'
 
 export default class VAT {
 	constructor() {
@@ -25,8 +22,14 @@ export default class VAT {
 		this.model.name = 'ball'
 
 		this.holder = this.resources.items.holderModel.scene.clone()
+		this.model.add(this.holder)
 
-		this.scene.add(this.model, this.holder)
+		/**
+		 * @type {Mesh}
+		 */
+		this.wireModel = this.resources.items.wireModel.scene.children[0]
+		this.wireModel.rotateZ(Math.PI)
+		this.scene.add(this.model, this.wireModel)
 	}
 
 	#createMaterial() {
@@ -79,9 +82,21 @@ export default class VAT {
 			}
 		)
 
+		const holderNormalTexture = this.resources.items.holderNormalTexture
+		const holderMaterial = new MeshStandardMaterial({
+			color: 0xffd700,
+			metalness: 1,
+			roughness: 0.5,
+			normalMap: holderNormalTexture,
+		})
+
 		this.model.traverse((child) => {
 			if (child.isMesh) {
-				child.material = this.material
+				if (child.name === 'export_mesh') {
+					child.material = this.material
+				} else if (child.name === 'gold_mesh') {
+					child.material = holderMaterial
+				}
 			}
 		})
 	}
@@ -92,8 +107,8 @@ export default class VAT {
 	}
 
 	#playAnim = () => {
-		// this.scene.physicsWorld.removeCollider(this.collider)
-		this.scene.dynamicBodies.delete(this.model)
+		// this.scene.physicsWorld.removeCollider(this.modelCollider)
+		// this.scene.dynamicBodies.delete(this.model)
 		this.model.quaternion.set(0, 0, 0, 1)
 
 		const totalFrames = getUniform(this.material, 'totalFrames').value - 15
@@ -112,35 +127,89 @@ export default class VAT {
 	}
 
 	#createPhysics() {
-		const modelBody = this.scene.physicsWorld.createRigidBody(
-			RAPIER.RigidBodyDesc.dynamic().setTranslation(0, 0, 0).setCanSleep(false)
+		const baseBody = this.scene.physicsWorld.createRigidBody(
+			RAPIER.RigidBodyDesc.fixed().setTranslation(0, 3, 0)
 		)
-		const modelShape = RAPIER.ColliderDesc.ball(1).setTranslation(-0.1, -0.2, 0)
-		this.collider = this.scene.physicsWorld.createCollider(modelShape, modelBody)
+
+		const wireBody = this.scene.physicsWorld.createRigidBody(
+			RAPIER.RigidBodyDesc.dynamic()
+				.setRotation({
+					x: this.wireModel.quaternion.x,
+					y: this.wireModel.quaternion.y,
+					z: this.wireModel.quaternion.z,
+					w: this.wireModel.quaternion.w,
+				})
+				.setTranslation(0, 1, 0)
+		)
+		const wireShape = RAPIER.ColliderDesc.cuboid(0.3, 0.5, 0.1)
+			.setRotation({
+				x: this.wireModel.quaternion.x,
+				y: this.wireModel.quaternion.y,
+				z: this.wireModel.quaternion.z,
+				w: this.wireModel.quaternion.w,
+			})
+			.setTranslation(0, 1, 0)
+			.setMass(1)
+
+		this.scene.physicsWorld.createCollider(wireShape, wireBody)
+		this.scene.dynamicBodies.set(this.wireModel, wireBody)
+
+		const lastBone = this.wireModel.getObjectByName('Bone005')
+		const lastBoneQuat = new Quaternion()
+		lastBone.getWorldQuaternion(lastBoneQuat)
+
+		const lastBoneBody = this.scene.physicsWorld.createRigidBody(
+			RAPIER.RigidBodyDesc.dynamic().setRotation({
+				x: lastBoneQuat.x,
+				y: lastBoneQuat.y,
+				z: lastBoneQuat.z,
+				w: lastBoneQuat.w,
+			})
+		)
+
+		const lastBoneShape = RAPIER.ColliderDesc.cuboid(0.3, 0.3, 0.1)
+			.setRotation({
+				x: lastBoneQuat.x,
+				y: lastBoneQuat.y,
+				z: lastBoneQuat.z,
+				w: lastBoneQuat.w,
+			})
+			.setMass(2)
+
+		this.scene.physicsWorld.createCollider(lastBoneShape, lastBoneBody)
+		this.scene.dynamicBodies.set(lastBone, lastBoneBody)
+
+		const modelBody = this.scene.physicsWorld.createRigidBody(RAPIER.RigidBodyDesc.dynamic())
+		const modelShape = RAPIER.ColliderDesc.ball(1).setTranslation(-0.1, -0.2, 0).setMass(20)
+		this.modelCollider = this.scene.physicsWorld.createCollider(modelShape, modelBody)
 		this.scene.dynamicBodies.set(this.model, modelBody)
 
-		const holderBody = this.scene.physicsWorld.createRigidBody(
-			RAPIER.RigidBodyDesc.dynamic().setTranslation(0, 0, 0).setCanSleep(false)
-		)
-		const holderShape = RAPIER.ColliderDesc.cuboid(0.3, 1.25, 0.3).setTranslation(0, 2.1, 0)
-		this.scene.physicsWorld.createCollider(holderShape, holderBody)
-		this.scene.dynamicBodies.set(this.holder, holderBody)
-
 		//joints
-		const baseBody = this.scene.physicsWorld.createRigidBody(
-			RAPIER.RigidBodyDesc.fixed().setTranslation(0, 3, 0).setCanSleep(false)
+		const baseJoint = RAPIER.JointData.revolute(
+			{ x: 0, y: 0.5, z: 0 },
+			{ x: 0, y: 0, z: 0 },
+			{ x: 0, y: 0, z: 1 }
 		)
-		const fixedJoint = RAPIER.JointData.spherical({ x: 0.0, y: 0.0, z: 0.0 }, { x: 0.0, y: 3.0, z: 0.0 })
-		this.scene.physicsWorld.createImpulseJoint(fixedJoint, baseBody, holderBody)
+		this.scene.physicsWorld.createImpulseJoint(baseJoint, baseBody, wireBody)
 
-		const sphericalJoint = RAPIER.JointData.spherical({ x: 0.0, y: 1, z: 0 }, { x: 0.0, y: 1, z: 0.0 })
-		this.scene.physicsWorld.createImpulseJoint(sphericalJoint, modelBody, holderBody)
-
-		const mouseBody = this.scene.physicsWorld.createRigidBody(
-			RAPIER.RigidBodyDesc.fixed().setTranslation(0, 0, 0).setCanSleep(false)
+		const boneJoint = RAPIER.JointData.revolute(
+			{ x: 0, y: 1.4, z: 0 },
+			{ x: 0, y: -0.6, z: 0 },
+			{ x: 0, y: 0, z: 1 }
 		)
+		this.scene.physicsWorld.createImpulseJoint(boneJoint, wireBody, lastBoneBody)
+
+		const ballJoint = RAPIER.JointData.revolute(
+			{ x: 0, y: 0.6, z: 0 },
+			{ x: -0.1, y: 1.33, z: 0 },
+			{ x: 0, y: 0, z: 1 }
+		)
+		this.scene.physicsWorld.createImpulseJoint(ballJoint, lastBoneBody, modelBody)
+
+		const mouseBody = this.scene.physicsWorld.createRigidBody(RAPIER.RigidBodyDesc.fixed())
 		const mouseShape = RAPIER.ColliderDesc.cuboid(0.1, 0.1, 2)
 		const mouseCollider = this.scene.physicsWorld.createCollider(mouseShape, mouseBody)
+		mouseCollider.setEnabled(false)
 
 		const bounds = new Vector3()
 		this.experience.camera.instance.getViewSize(10, bounds)

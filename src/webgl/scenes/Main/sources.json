@@ -39,5 +39,13 @@
 	{
 		"name": "holderModel",
 		"path": "models/holder.glb"
+	},
+	{
+		"name": "holderNormalTexture",
+		"path": "textures/holder_normal.webp"
+	},
+	{
+		"name": "wireModel",
+		"path": "models/wire.glb"
 	}
 ]
