@@ -21,9 +21,9 @@ body {
 }
 
 .cursor {
+	/* display: none; */
 	cursor: none;
 	user-select: none;
-	/* disable image select */
 	translate: -50% -50%;
 	transition: scale 0.1s;
 	animation: cursor 5s infinite linear;

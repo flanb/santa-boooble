@@ -108,59 +108,39 @@ export default class Resources extends EventEmitter {
 				continue
 			}
 
-			switch (source.path.split('.').pop()) {
-				//models
-				case 'gltf':
-				case 'glb':
-					this.loaders.gltfLoader.load(source.path, (file) => {
-						this.sourceLoaded(source, file)
-					})
-					break
-				case 'fbx':
-					this.loaders.fbxLoader.load(source.path, (file) => {
-						this.sourceLoaded(source, file)
-					})
-					break
+			const extension = source.path.split('.').pop().toLowerCase()
+			const loaderMap = {
+				//3D
+				gltf: this.loaders.gltfLoader,
+				glb: this.loaders.gltfLoader,
+				fbx: this.loaders.fbxLoader,
+				//hdri
+				exr: this.loaders.exrLoader,
+				hdr: this.loaders.rgbeLoader,
 				//textures
-				case 'exr':
-					this.loaders.exrLoader.load(source.path, (file) => {
-						this.sourceLoaded(source, file)
-					})
-					break
-				case 'hdr':
-					this.loaders.rgbeLoader.load(source.path, (file) => {
-						this.sourceLoaded(source, file)
-					})
-					break
-				case 'png':
-				case 'jpg':
-				case 'jpeg':
-				case 'webp':
-					this.loaders.textureLoader.load(source.path, (file) => {
-						this.sourceLoaded(source, file)
-					})
-					break
-				case 'ktx2':
-					this.loaders.ktx2Loader.load(source.path, (file) => {
-						this.sourceLoaded(source, file)
-					})
-					break
-				case 'cubeTexture':
-					this.loaders.cubeTextureLoader.load(source.path, (file) => {
-						this.sourceLoaded(source, file)
-					})
-					break
+				png: this.loaders.textureLoader,
+				jpg: this.loaders.textureLoader,
+				jpeg: this.loaders.textureLoader,
+				webp: this.loaders.textureLoader,
+				ktx2: this.loaders.ktx2Loader,
+				cubeTexture: this.loaders.cubeTextureLoader,
 				//audio
-				case 'mp3':
-				case 'ogg':
-				case 'wav':
-					this.loaders.audioLoader.load(source.path, (file) => {
-						this.sourceLoaded(source, file)
-					})
-					break
-				default:
-					console.error(source.path + ' is not a valid source type')
-					break
+				mp3: this.loaders.audioLoader,
+				ogg: this.loaders.audioLoader,
+				wav: this.loaders.audioLoader,
+			}
+
+			const loader = loaderMap[extension]
+			if (loader) {
+				loader.load(
+					source.path,
+					(file) => this.sourceLoaded(source, file),
+					undefined,
+					(error) =>
+						console.error(`Error loading ${extension} ${source.path}. Does the file exist?`, error)
+				)
+			} else {
+				console.error(`${source.path} is not a valid source type`)
 			}
 		}
 	}

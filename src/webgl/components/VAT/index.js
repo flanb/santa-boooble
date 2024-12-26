@@ -127,6 +127,8 @@ export default class VAT {
 	}
 
 	#playAnim = () => {
+		this.model.removeEventListener('click', this.#playAnim)
+
 		this.paper = new Paper()
 
 		// this.scene.physicsWorld.removeCollider(this.modelCollider)

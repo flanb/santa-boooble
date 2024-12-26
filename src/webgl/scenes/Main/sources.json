@@ -74,5 +74,18 @@
 	{
 		"name": "paperNormalsTexture",
 		"path": "textures/paper_normals.png"
+	},
+	{
+		"name": "paperNormalMapTexture",
+		"path": "textures/paper_normalmap.webp"
+	},
+	{
+		"name": "paperColorTexture",
+		"path": "textures/paper_color.webp",
+		"colorSpace": "srgb"
+	},
+	{
+		"name": "paperRoughnessTexture",
+		"path": "textures/paper_roughness.webp"
 	}
 ]

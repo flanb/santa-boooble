@@ -44,7 +44,6 @@ export default class Environment {
 		this.environmentMap.texture = this.resources.items.environmentMapTexture
 		this.environmentMap.texture.encoding = SRGBColorSpace
 		this.environmentMap.texture.mapping = EquirectangularReflectionMapping
-		console.log(this.environmentMap.texture)
 
 		this.scene.environment = this.environmentMap.texture
 		// this.scene.background = this.environmentMap.texture

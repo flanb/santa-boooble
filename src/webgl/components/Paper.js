@@ -4,6 +4,7 @@ import Experience from 'core/Experience.js'
 import { Mesh, MeshStandardMaterial, Quaternion, Vector3 } from 'three'
 import gsap from 'gsap'
 import { NearestFilter } from 'three'
+import { RepeatWrapping } from 'three'
 
 export default class Paper {
 	constructor() {
@@ -24,10 +25,16 @@ export default class Paper {
 	#createMaterial() {
 		const vatTexture = this.resources.items.paperPositionTexture
 		const normalsTexture = this.resources.items.paperNormalsTexture
+		const colorTexture = this.resources.items.paperColorTexture
+		const normalMapTexture = this.resources.items.paperNormalMapTexture
+		const roughnessTexture = this.resources.items.paperRoughnessTexture
 
 		this.material = extendMaterial(
 			new MeshStandardMaterial({
 				side: 2,
+				map: colorTexture,
+				normalMap: normalMapTexture,
+				roughnessMap: roughnessTexture,
 			}),
 			{
 				uniforms: {
@@ -46,7 +53,6 @@ export default class Paper {
                     uniform float fps; 
                     uniform sampler2D posTexture;
                     uniform sampler2D normalsTexture;
-                    varying vec3 vPosNormal;
                 `,
 					project_vertex: `
                     float frame = mod(uTime * fps, totalFrames) / totalFrames ;
@@ -55,66 +61,12 @@ export default class Paper {
                     float numWraps = 2.;
                     vec4 texturePos = texture(posTexture, vec2(uv1.x, 1. - uv1.y + (1. - frame) / numWraps));
                     vec4 textureNormal = texture(normalsTexture, vec2(uv1.x, 1. - uv1.y + (1. - frame) / numWraps)) * 2.0 - 1.0;
-					vPosNormal = textureNormal.xzy;
+					vNormal = textureNormal.xzy;
                     // translate the position
                     vec4 translated = vec4(position + texturePos.xzy, 1.0);
                     vec4 mvPosition = modelViewMatrix * translated;
                     gl_Position = projectionMatrix * mvPosition;
                 `,
-				},
-				fragmentShader: {
-					common: `
-					#include <common>
-					varying vec3 vPosNormal;
-				`,
-					normal_fragment_begin: `
-                    float faceDirection = gl_FrontFacing ? 1.0 : - 1.0;
-	#ifdef FLAT_SHADED
-		vec3 fdx = dFdx( vViewPosition );
-		vec3 fdy = dFdy( vViewPosition );
-		vec3 normal = normalize( cross( fdx, fdy ) );
-	#else
-		vec3 normal = normalize( vPosNormal );
-		#ifdef DOUBLE_SIDED
-			normal *= faceDirection;
-		#endif
-	#endif
-	#if defined( USE_NORMALMAP_TANGENTSPACE ) || defined( USE_CLEARCOAT_NORMALMAP ) || defined( USE_ANISOTROPY )
-		#ifdef USE_TANGENT
-			mat3 tbn = mat3( normalize( vTangent ), normalize( vBitangent ), normal );
-		#else
-			mat3 tbn = getTangentFrame( - vViewPosition, normal,
-			#if defined( USE_NORMALMAP )
-				vNormalMapUv
-			#elif defined( USE_CLEARCOAT_NORMALMAP )
-				vClearcoatNormalMapUv
-			#else
-				vUv
-			#endif
-			);
-		#endif
-		#if defined( DOUBLE_SIDED ) && ! defined( FLAT_SHADED )
-			tbn[0] *= faceDirection;
-			tbn[1] *= faceDirection;
-		#endif
-	#endif
-	#ifdef USE_CLEARCOAT_NORMALMAP
-		#ifdef USE_TANGENT
-			mat3 tbn2 = mat3( normalize( vTangent ), normalize( vBitangent ), normal );
-		#else
-			mat3 tbn2 = getTangentFrame( - vViewPosition, normal, vClearcoatNormalMapUv );
-		#endif
-		#if defined( DOUBLE_SIDED ) && ! defined( FLAT_SHADED )
-			tbn2[0] *= faceDirection;
-			tbn2[1] *= faceDirection;
-		#endif
-	#endif
-	vec3 nonPerturbedNormal = normal;
-                `,
-					// 	dithering_fragment: `
-					//     #include <dithering_fragment>
-					//     gl_FragColor = vec4(normalize(vPosNormal), 1.);
-					// `,
 				},
 			}
 		)
