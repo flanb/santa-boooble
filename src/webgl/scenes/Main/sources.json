@@ -35,10 +35,32 @@
 	},
 	{
 		"name": "holderNormalTexture",
-		"path": "textures/holder_normal.webp"
+		"path": "textures/holder_normal.webp",
+		"flipY": false
+	},
+	{
+		"name": "holderRoughnessTexture",
+		"path": "textures/holder_roughness.webp",
+		"flipY": false
 	},
 	{
 		"name": "wireModel",
 		"path": "models/wire.glb"
+	},
+	{
+		"name": "wireNormalTexture",
+		"path": "textures/wire_normal.webp"
+	},
+	{
+		"name": "wireRoughnessTexture",
+		"path": "textures/wire_roughness.webp"
+	},
+	{
+		"name": "wireMetallicTexture",
+		"path": "textures/wire_metallic.webp"
+	},
+	{
+		"name": "wireColorTexture",
+		"path": "textures/wire_color.webp"
 	}
 ]

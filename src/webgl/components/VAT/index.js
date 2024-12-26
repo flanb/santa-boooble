@@ -83,11 +83,14 @@ export default class VAT {
 		)
 
 		const holderNormalTexture = this.resources.items.holderNormalTexture
+		const holderRoughnessTexture = this.resources.items.holderRoughnessTexture
+
 		const holderMaterial = new MeshStandardMaterial({
 			color: 0xffd700,
 			metalness: 1,
-			roughness: 0.5,
 			normalMap: holderNormalTexture,
+			side: 2,
+			roughnessMap: holderRoughnessTexture,
 		})
 
 		this.model.traverse((child) => {
@@ -97,6 +100,24 @@ export default class VAT {
 				} else if (child.name === 'gold_mesh') {
 					child.material = holderMaterial
 				}
+			}
+		})
+
+		const wireColorTexture = this.resources.items.wireColorTexture
+		const wireNormalTexture = this.resources.items.wireNormalTexture
+		const wireRoughnessTexture = this.resources.items.wireRoughnessTexture
+		const wireMetallicTexture = this.resources.items.wireMetallicTexture
+
+		const wireMaterial = new MeshStandardMaterial({
+			map: wireColorTexture,
+			normalMap: wireNormalTexture,
+			roughnessMap: wireRoughnessTexture,
+			metalnessMap: wireMetallicTexture,
+		})
+
+		this.wireModel.traverseVisible((child) => {
+			if (child.isMesh) {
+				child.material = wireMaterial
 			}
 		})
 	}

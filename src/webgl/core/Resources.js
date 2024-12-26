@@ -168,7 +168,6 @@ export default class Resources extends EventEmitter {
 	sourceLoaded(source, file) {
 		const { name, path, type, startTime, ...rest } = source
 		Object.assign(file, rest)
-		console.log(file)
 
 		this.items[source.name] = file
 		file.name = source.name
