@@ -3,6 +3,7 @@ import { extendMaterial, getUniform, setUniform } from '@/webgl/utils/extendMate
 import RAPIER from '@dimforge/rapier3d-compat'
 import Experience from 'core/Experience.js'
 import { Mesh, MeshStandardMaterial, Quaternion, Vector3 } from 'three'
+import Paper from '../Paper'
 
 export default class VAT {
 	constructor() {
@@ -53,7 +54,6 @@ export default class VAT {
 				uniforms: {
 					uTime: { value: 0.0067 },
 					posTexture: { value: vatTexture },
-					normalTexture: { value: normalTexture },
 					totalFrames: { value: 60 },
 					fps: { value: 60 },
 				},
@@ -65,7 +65,6 @@ export default class VAT {
 					uniform float totalFrames; 
 					uniform float fps; 
 					uniform sampler2D posTexture;
-					uniform sampler2D normalTexture;
 				`,
 					project_vertex: `
 					float frame = (mod(uTime * fps, totalFrames-12. ) + 12.) / totalFrames ;
@@ -128,6 +127,8 @@ export default class VAT {
 	}
 
 	#playAnim = () => {
+		this.paper = new Paper()
+
 		// this.scene.physicsWorld.removeCollider(this.modelCollider)
 		// this.scene.dynamicBodies.delete(this.model)
 		this.model.quaternion.set(0, 0, 0, 1)

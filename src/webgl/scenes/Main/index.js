@@ -5,6 +5,7 @@ import Experience from 'core/Experience.js'
 import Resources from 'core/Resources.js'
 import { Mesh } from 'three'
 import sources from './sources.json'
+import Paper from '@/webgl/components/Paper'
 
 export default class Main {
 	constructor() {
@@ -20,6 +21,7 @@ export default class Main {
 		this.scene.resources.on('ready', () => {
 			this.environment = new Environment()
 			this.vat = new VAT()
+			// this.paper = new Paper()
 		})
 		this.#createDebug()
 	}

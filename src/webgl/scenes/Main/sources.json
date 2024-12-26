@@ -62,5 +62,17 @@
 	{
 		"name": "wireColorTexture",
 		"path": "textures/wire_color.webp"
+	},
+	{
+		"name": "paperModel",
+		"path": "models/paper.glb"
+	},
+	{
+		"name": "paperPositionTexture",
+		"path": "textures/paper_offsets.exr"
+	},
+	{
+		"name": "paperNormalsTexture",
+		"path": "textures/paper_normals.png"
 	}
 ]
