@@ -19,3 +19,25 @@ body {
 	left: 0;
 	outline: none;
 }
+
+.cursor {
+	cursor: none;
+	user-select: none;
+	/* disable image select */
+	translate: -50% -50%;
+	transition: scale 0.1s;
+	animation: cursor 5s infinite linear;
+}
+
+.cursor:active {
+	scale: 0.8;
+}
+
+@keyframes cursor {
+	from {
+		rotate: 0;
+	}
+	to {
+		rotate: 359deg;
+	}
+}
