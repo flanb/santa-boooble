@@ -1,11 +1,20 @@
 import EventEmitter from 'core/EventEmitter.js'
-import { AudioLoader, CubeTexture, CubeTextureLoader, Object3D, Texture, TextureLoader, WebGLRenderer } from 'three'
+import {
+	AudioLoader,
+	CubeTexture,
+	CubeTextureLoader,
+	Object3D,
+	Texture,
+	TextureLoader,
+	WebGLRenderer,
+} from 'three'
 import Experience from 'core/Experience.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
 import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader'
+import { RGBELoader } from 'three/addons/loaders/RGBELoader.js'
 
 export default class Resources extends EventEmitter {
 	constructor(sources) {
@@ -80,6 +89,7 @@ export default class Resources extends EventEmitter {
 		this.loaders.audioLoader = new AudioLoader()
 		this.loaders.fbxLoader = new FBXLoader()
 		this.loaders.exrLoader = new EXRLoader()
+		this.loaders.rgbeLoader = new RGBELoader()
 	}
 
 	startLoading() {
@@ -114,6 +124,11 @@ export default class Resources extends EventEmitter {
 				//textures
 				case 'exr':
 					this.loaders.exrLoader.load(source.path, (file) => {
+						this.sourceLoaded(source, file)
+					})
+					break
+				case 'hdr':
+					this.loaders.rgbeLoader.load(source.path, (file) => {
 						this.sourceLoaded(source, file)
 					})
 					break
@@ -153,6 +168,8 @@ export default class Resources extends EventEmitter {
 	sourceLoaded(source, file) {
 		const { name, path, type, startTime, ...rest } = source
 		Object.assign(file, rest)
+		console.log(file)
+
 		this.items[source.name] = file
 		file.name = source.name
 		this.loaded++

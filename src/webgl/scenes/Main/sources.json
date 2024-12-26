@@ -1,15 +1,8 @@
 [
 	{
 		"name": "environmentMapTexture",
-		"path": [
-			"textures/environmentMap/px.jpg",
-			"textures/environmentMap/nx.jpg",
-			"textures/environmentMap/py.jpg",
-			"textures/environmentMap/ny.jpg",
-			"textures/environmentMap/pz.jpg",
-			"textures/environmentMap/nz.jpg"
-		],
-		"colorSpace": "srgb"
+		"path": "textures/envmap.hdr",
+		"mapping": "303"
 	},
 	{
 		"name": "ballModel",

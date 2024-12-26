@@ -1,4 +1,5 @@
 import Experience from 'core/Experience.js'
+import { EquirectangularReflectionMapping } from 'three'
 import { DirectionalLight, Mesh, MeshStandardMaterial, SRGBColorSpace } from 'three'
 import addObjectDebug from 'utils/addObjectDebug.js'
 
@@ -39,33 +40,35 @@ export default class Environment {
 
 	setEnvironmentMap() {
 		this.environmentMap = {}
-		this.environmentMap.intensity = 0.4
+		// this.environmentMap.intensity = 0.4
 		this.environmentMap.texture = this.resources.items.environmentMapTexture
-		this.environmentMap.texture.colorSpace = SRGBColorSpace
+		this.environmentMap.texture.encoding = SRGBColorSpace
+		this.environmentMap.texture.mapping = EquirectangularReflectionMapping
+		console.log(this.environmentMap.texture)
 
 		this.scene.environment = this.environmentMap.texture
+		// this.scene.background = this.environmentMap.texture
 
-		this.environmentMap.updateMaterials = () => {
-			this.scene.traverse((child) => {
-				if (child instanceof Mesh && child.material instanceof MeshStandardMaterial) {
-					child.material.envMap = this.environmentMap.texture
-					child.material.envMapIntensity = this.environmentMap.intensity
-					child.material.needsUpdate = true
-				}
-			})
-		}
-		this.environmentMap.updateMaterials()
+		// this.environmentMap.updateMaterials = () => {
+		// 	this.scene.traverse((child) => {
+		// 		if (child instanceof Mesh && child.material instanceof MeshStandardMaterial) {
+		// 			child.material.envMap = this.environmentMap.texture
+		// 			child.material.envMapIntensity = this.environmentMap.intensity
+		// 			child.material.needsUpdate = true
+		// 		}
+		// 	})
+		// }
+		// this.environmentMap.updateMaterials()
 
 		// Debug
-		if (this.debug.active) {
-			this.environmentDebugFolder
-				.addBinding(this.environmentMap, 'intensity', {
-					min: 0,
-					max: 4,
-					step: 0.001,
-					label: 'envMapIntensity',
-				})
-				.on('change', this.environmentMap.updateMaterials)
-		}
+		// if (this.debug.active) {
+		// 	this.environmentDebugFolder.addBinding(this.environmentMap, 'intensity', {
+		// 		min: 0,
+		// 		max: 4,
+		// 		step: 0.001,
+		// 		label: 'envMapIntensity',
+		// 	})
+		// 	// .on('change', this.environmentMap.updateMaterials)
+		// }
 	}
 }
