@@ -21,9 +21,8 @@ export default class Main {
 		this.scene.resources.on('ready', () => {
 			this.environment = new Environment()
 			this.vat = new VAT()
-			// this.paper = new Paper()
+			this.paper = new Paper(this.vat)
 		})
-		this.#createDebug()
 	}
 
 	async #initPhysics() {
@@ -40,10 +39,6 @@ export default class Main {
 		)
 		const groundShape = RAPIER.ColliderDesc.cuboid(10, 1, 10)
 		this.scene.physicsWorld.createCollider(groundShape, groundBody)
-	}
-
-	#createDebug() {
-		const debugFolder = this.experience.debug.ui.addFolder({ title: 'Scene' })
 	}
 
 	update() {

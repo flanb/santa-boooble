@@ -129,7 +129,10 @@ export default class VAT {
 	#playAnim = () => {
 		this.model.removeEventListener('click', this.#playAnim)
 
-		this.paper = new Paper()
+		const paper = this.scene.getObjectByName('paper')
+		paper.position.copy(this.model.position)
+		paper.quaternion.copy(this.model.quaternion)
+		paper.class.play()
 
 		// this.scene.physicsWorld.removeCollider(this.modelCollider)
 		// this.scene.dynamicBodies.delete(this.model)
@@ -141,7 +144,7 @@ export default class VAT {
 
 		const startTime = this.experience.time.elapsed
 		const animate = () => {
-			const elapsedTime = (this.experience.time.elapsed - startTime) / 1000
+			const elapsedTime = (this.experience.time.elapsed - startTime) / 2000
 			setUniform(this.material, 'uTime', elapsedTime)
 			if (elapsedTime < duration) {
 				requestAnimationFrame(animate)
@@ -257,7 +260,7 @@ export default class VAT {
 	}
 
 	#createDebug() {
-		const debugFolder = addObjectDebug(this.experience.debug.ui, this.model)
+		// const debugFolder = addObjectDebug(this.experience.debug.ui, this.model)
 	}
 
 	update() {
