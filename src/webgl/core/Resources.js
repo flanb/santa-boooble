@@ -15,6 +15,8 @@ import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
 import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader'
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js'
+import { setProgress } from '@/scripts/rive'
+import gsap from 'gsap'
 
 export default class Resources extends EventEmitter {
 	constructor(sources) {
@@ -39,7 +41,7 @@ export default class Resources extends EventEmitter {
 		}
 
 		if (!this.debug.active || this.debug.debugParams.LoadingScreen) {
-			this.setLoadingScreen()
+			// this.setLoadingScreen()
 		}
 		this.setLoaders()
 		this.startLoading()
@@ -161,6 +163,7 @@ export default class Resources extends EventEmitter {
 				'font-weight: bold',
 				'font-weight: normal'
 			)
+		setProgress((this.loaded / this.toLoad) * 100)
 		if (this.loadingScreenElement) {
 			this.loadingBarElement.style.transform = `scaleX(${this.loaded / this.toLoad})`
 		}
@@ -174,6 +177,8 @@ export default class Resources extends EventEmitter {
 			}
 			if (this.loadingScreenElement) this.loadingScreenElement.remove()
 			this.trigger('ready')
+
+			gsap.to('#webgl', { autoAlpha: 1, duration: 1, ease: 'power1.in' })
 		}
 	}
 }

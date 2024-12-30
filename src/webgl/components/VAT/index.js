@@ -4,6 +4,7 @@ import RAPIER from '@dimforge/rapier3d-compat'
 import Experience from 'core/Experience.js'
 import { Mesh, MeshStandardMaterial, Quaternion, Vector3 } from 'three'
 import Paper from '../Paper'
+import { breakMode } from '@/scripts/rive'
 
 export default class VAT {
 	constructor() {
@@ -61,9 +62,9 @@ export default class VAT {
 					common: `
 					#include <common>
 					attribute vec2 uv1;
-					uniform float uTime; 
-					uniform float totalFrames; 
-					uniform float fps; 
+					uniform float uTime;
+					uniform float totalFrames;
+					uniform float fps;
 					uniform sampler2D posTexture;
 				`,
 					project_vertex: `
@@ -166,7 +167,7 @@ export default class VAT {
 					z: this.wireModel.quaternion.z,
 					w: this.wireModel.quaternion.w,
 				})
-				.setTranslation(0, 1, 0)
+				.setTranslation(0, 3, 0)
 		)
 		const wireShape = RAPIER.ColliderDesc.cuboid(0.3, 0.5, 0.1)
 			.setRotation({
@@ -186,28 +187,40 @@ export default class VAT {
 		lastBone.getWorldQuaternion(lastBoneQuat)
 
 		const lastBoneBody = this.scene.physicsWorld.createRigidBody(
-			RAPIER.RigidBodyDesc.dynamic().setRotation({
-				x: lastBoneQuat.x,
-				y: lastBoneQuat.y,
-				z: lastBoneQuat.z,
-				w: lastBoneQuat.w,
-			})
+			RAPIER.RigidBodyDesc.dynamic()
+				.setRotation({
+					x: lastBoneQuat.x,
+					y: lastBoneQuat.y,
+					z: lastBoneQuat.z,
+					w: lastBoneQuat.w,
+				})
+				.setTranslation(2, 2, 0)
 		)
 
-		const lastBoneShape = RAPIER.ColliderDesc.cuboid(0.3, 0.3, 0.1)
+		const lastBoneShape = RAPIER.ColliderDesc.cuboid(0.3, 0.2, 0.1)
 			.setRotation({
 				x: lastBoneQuat.x,
 				y: lastBoneQuat.y,
 				z: lastBoneQuat.z,
 				w: lastBoneQuat.w,
 			})
-			.setMass(2)
+			.setMass(1)
 
 		this.scene.physicsWorld.createCollider(lastBoneShape, lastBoneBody)
 		this.scene.dynamicBodies.set(lastBone, lastBoneBody)
 
-		const modelBody = this.scene.physicsWorld.createRigidBody(RAPIER.RigidBodyDesc.dynamic())
-		const modelShape = RAPIER.ColliderDesc.ball(1).setTranslation(-0.1, -0.2, 0).setMass(20)
+		/**
+		 * @type {RAPIER.RigidBody} modelBody - The created dynamic rigid body.
+		 */
+		const modelBody = this.scene.physicsWorld.createRigidBody(
+			RAPIER.RigidBodyDesc.dynamic()
+				.setTranslation(4, 4, 0)
+				.setRotation({ x: 0, y: 0, z: 0.8, w: 0.6 })
+		)
+		const modelShape = RAPIER.ColliderDesc.ball(1).setTranslation(-0.1, -0.2, 0).setMass(1)
+		/**
+		 * @type {RAPIER.Collider}
+		 */
 		this.modelCollider = this.scene.physicsWorld.createCollider(modelShape, modelBody)
 		this.scene.dynamicBodies.set(this.model, modelBody)
 
@@ -217,21 +230,27 @@ export default class VAT {
 			{ x: 0, y: 0, z: 0 },
 			{ x: 0, y: 0, z: 1 }
 		)
-		this.scene.physicsWorld.createImpulseJoint(baseJoint, baseBody, wireBody)
+
+		const baseImp = this.scene.physicsWorld.createImpulseJoint(baseJoint, baseBody, wireBody)
 
 		const boneJoint = RAPIER.JointData.revolute(
 			{ x: 0, y: 1.4, z: 0 },
 			{ x: 0, y: -0.6, z: 0 },
 			{ x: 0, y: 0, z: 1 }
 		)
-		this.scene.physicsWorld.createImpulseJoint(boneJoint, wireBody, lastBoneBody)
+		const wireImp = this.scene.physicsWorld.createImpulseJoint(boneJoint, wireBody, lastBoneBody)
 
 		const ballJoint = RAPIER.JointData.revolute(
 			{ x: 0, y: 0.6, z: 0 },
 			{ x: -0.1, y: 1.33, z: 0 },
 			{ x: 0, y: 0, z: 1 }
 		)
-		this.scene.physicsWorld.createImpulseJoint(ballJoint, lastBoneBody, modelBody)
+		const ballImp = this.scene.physicsWorld.createImpulseJoint(ballJoint, lastBoneBody, modelBody)
+
+		baseImp.configureMotorVelocity(0, 1e2)
+		wireImp.configureMotorVelocity(0, 1e2)
+		wireImp.setLimits(-1, 1)
+		ballImp.configureMotorVelocity(0, 1e2)
 
 		const mouseBody = this.scene.physicsWorld.createRigidBody(RAPIER.RigidBodyDesc.fixed())
 		const mouseShape = RAPIER.ColliderDesc.cuboid(0.1, 0.1, 2)
@@ -241,15 +260,20 @@ export default class VAT {
 		const bounds = new Vector3()
 		this.experience.camera.instance.getViewSize(10, bounds)
 
-		addEventListener('mousedown', (event) => {
-			//enable mouse physics
-			mouseCollider.setEnabled(true)
-		})
+		// addEventListener('mousedown', (event) => {
+		// 	//enable mouse physics
+		// 	mouseCollider.setEnabled(true)
+		// })
 
-		addEventListener('mouseup', (event) => {
-			mouseCollider.setEnabled(false)
-		})
+		// addEventListener('mouseup', (event) => {
+		// 	mouseCollider.setEnabled(false)
+		// })
 		addEventListener('mousemove', (event) => {
+			if (breakMode) {
+				mouseCollider.setEnabled(false)
+				return
+			}
+			mouseCollider.setEnabled(true)
 			const x = (event.clientX / window.innerWidth) * 2 - 1
 			const y = -(event.clientY / window.innerHeight) * 2 + 1
 
