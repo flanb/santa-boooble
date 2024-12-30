@@ -5,6 +5,7 @@ import Experience from 'core/Experience.js'
 import { Mesh, MeshStandardMaterial, Quaternion, Vector3 } from 'three'
 import Paper from '../Paper'
 import { breakMode } from '@/scripts/rive'
+import { toggleHoverCursor } from '@/scripts/cursor'
 
 export default class VAT {
 	constructor() {
@@ -125,6 +126,12 @@ export default class VAT {
 	#createInteraction() {
 		this.experience.interactionManager.addInteractiveObject(this.model)
 		this.model.addEventListener('click', this.#playAnim)
+		this.model.addEventListener('mouseenter', () => {
+			toggleHoverCursor(true)
+		})
+		this.model.addEventListener('mouseleave', () => {
+			toggleHoverCursor(false)
+		})
 	}
 
 	#playAnim = () => {

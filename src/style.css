@@ -19,10 +19,19 @@ body {
 	top: 0;
 	left: 0;
 	outline: none;
-	opacity: 0;
+}
+.cursor-container.hover {
+	.cursor {
+		display: none;
+	}
+
+	.cursor-hover {
+		display: block;
+	}
 }
 
-.cursor {
+.cursor,
+.cursor-hover {
 	/* display: none; */
 	pointer-events: none;
 	cursor: none;
@@ -31,8 +40,17 @@ body {
 	transition: scale 0.1s;
 	animation: cursor 5s infinite linear;
 }
+.cursor-hover {
+	display: none;
+	circle {
+		scale: 1.1;
+		transform-origin: center center;
+		animation: pulse 0.5s infinite alternate;
+	}
+}
 
-*:active .cursor {
+*:active .cursor,
+*:active .cursor-hover {
 	scale: 0.8;
 }
 
@@ -42,6 +60,15 @@ body {
 	}
 	to {
 		rotate: 359deg;
+	}
+}
+
+@keyframes pulse {
+	from {
+		scale: 1;
+	}
+	to {
+		scale: 1.1;
 	}
 }
 
@@ -86,6 +113,7 @@ body {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	background: linear-gradient(40deg, #ffdebf 0, #fffcf0 40%, #fffadd 70%);
 }
 
 #loader {

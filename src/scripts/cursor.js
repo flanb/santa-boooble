@@ -1,5 +1,5 @@
+let cursor = document.querySelector('.cursor-container')
 export default function createCursor() {
-	const cursor = document.querySelector('.cursor-container')
 	cursorLerp(cursor)
 }
 
@@ -23,4 +23,12 @@ function cursorLerp(cursor) {
 	}
 
 	animate()
+}
+
+export function toggleHoverCursor(hoverCursor = false) {
+	if (hoverCursor) {
+		cursor.classList.add('hover')
+	} else {
+		cursor.classList.remove('hover')
+	}
 }

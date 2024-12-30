@@ -1,6 +1,8 @@
 import { Raycaster, Vector2 } from 'three'
 import Experience from 'core/Experience.js'
 
+//TODO : drag
+
 export default class InteractionManager {
 	constructor(camera) {
 		this.camera = camera
@@ -14,6 +16,7 @@ export default class InteractionManager {
 
 		this.interactiveObjects = []
 		this.intersectsObjects = []
+		this.previousHoveredObjects = []
 		this.needsUpdate = false
 	}
 
@@ -22,6 +25,10 @@ export default class InteractionManager {
 			this.pointer.x = (event.clientX / this.sizes.width) * 2 - 1
 			this.pointer.y = -(event.clientY / this.sizes.height) * 2 + 1
 			this.needsUpdate = true
+
+			if (this.dragObject) {
+				this.dragObject.dispatchEvent({ type: 'drag', mouseEvent: event })
+			}
 		})
 
 		addEventListener('click', (event) => {
@@ -31,29 +38,24 @@ export default class InteractionManager {
 			})
 		})
 
-		let lastPosition = new Vector2()
-		let dragElement
 		addEventListener('mousedown', (event) => {
 			if (!this.intersectsObjects.length) return
 			this.intersectsObjects.forEach((object) => {
-				if (object.isHovered) {
-					dragElement = object
-				}
+				object.dispatchEvent({ type: 'mousedown' })
+				this.dragObject = object
 			})
-			lastPosition.copy(this.pointer)
 		})
 
 		addEventListener('mouseup', (event) => {
+			this.interactiveObjects.forEach((object) => {
+				object.dispatchEvent({ type: 'mouseup' })
+				this.dragObject = null
+			})
 			// if (!this.intersectsObjects.length) return
-			const distance = lastPosition.distanceTo(this.pointer)
-			if (distance > 0.01) {
-				//TODO: WIP
-				// dragElement.dispatchEvent({ type: 'drag', distance, direction: this.pointer.clone().sub(lastPosition) })
-				// this.intersectsObjects.forEach((object) => {
-				// 	object.dispatchEvent({ type: 'drag', distance: lastPosition.distanceTo(this.pointer) })
-				// })
-			}
-			lastPosition.set(0, 0)
+			// this.intersectsObjects.forEach((object) => {
+			// 	object.dispatchEvent({ type: 'mouseup' })
+			// 	this.dragObject = null
+			// })
 		})
 	}
 
@@ -61,25 +63,40 @@ export default class InteractionManager {
 		if (!this.interactiveObjects.includes(object)) this.interactiveObjects.push(object)
 	}
 
-	update() {
-		if (!this.needsUpdate) return
-		this.intersectsObjects = []
-		if (!this.interactiveObjects.length) return
-		this.raycaster.setFromCamera(this.pointer, this.camera)
+	removeInteractiveObject(object) {
+		this.interactiveObjects = this.interactiveObjects.filter((obj) => obj !== object)
+	}
 
+	update() {
+		if (!this.needsUpdate || !this.interactiveObjects.length) return
+		this.intersectsObjects = []
+
+		this.raycaster.setFromCamera(this.pointer, this.camera)
 		const intersects = this.raycaster.intersectObjects(this.interactiveObjects)
 
 		intersects.forEach((intersect) => {
-			this.interactiveObjects.forEach((object) => {
-				if (object.children.includes(intersect.object)) {
+			const object = this.interactiveObjects.find(
+				(obj) => obj.children.includes(intersect.object) || obj === intersect.object
+			)
+			if (object && !this.intersectsObjects.includes(object)) {
+				this.intersectsObjects.push(object)
+				if (!object.isHovered) {
 					object.dispatchEvent({ type: 'mouseover' })
-					this.intersectsObjects.push(object)
+					object.dispatchEvent({ type: 'mouseenter' })
 					object.isHovered = true
 				}
-			})
-			intersect.object.dispatchEvent({ type: 'mouseover' })
-			this.intersectsObjects.push(intersect.object)
-			intersect.object.isHovered = true
+			}
 		})
+
+		// Dispatch mouseleave event for objects that are no longer intersected
+		this.previousHoveredObjects.forEach((object) => {
+			if (!this.intersectsObjects.includes(object)) {
+				object.dispatchEvent({ type: 'mouseleave' })
+				object.isHovered = false
+			}
+		})
+
+		this.previousHoveredObjects = this.intersectsObjects
+		// this.needsUpdate = false
 	}
 }

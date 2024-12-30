@@ -178,7 +178,7 @@ export default class Resources extends EventEmitter {
 			if (this.loadingScreenElement) this.loadingScreenElement.remove()
 			this.trigger('ready')
 
-			gsap.to('#webgl', { autoAlpha: 1, duration: 1, ease: 'power1.in' })
+			gsap.to('.loader-container', { autoAlpha: 0, duration: 1, ease: 'power1.in' })
 		}
 	}
 }
