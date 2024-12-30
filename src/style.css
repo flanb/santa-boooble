@@ -20,6 +20,10 @@ body {
 	left: 0;
 	outline: none;
 }
+
+.cursor-container {
+	pointer-events: none;
+}
 .cursor-container.hover {
 	.cursor {
 		display: none;
@@ -33,7 +37,6 @@ body {
 .cursor,
 .cursor-hover {
 	/* display: none; */
-	pointer-events: none;
 	cursor: none;
 	user-select: none;
 	translate: -50% -50%;

@@ -74,6 +74,15 @@ function createButton() {
 				() => {
 					// buttonRive.stateMachineInputs('State Machine 1')[0].fire()
 					breakMode = true
+					//delete button
+					gsap.to(buttonRive.canvas, {
+						autoAlpha: 0,
+						duration: 0.5,
+						onComplete: () => {
+							// buttonRive.cleanup()
+							// buttonRive.canvas.remove()
+						},
+					})
 				},
 				{ once: true }
 			)

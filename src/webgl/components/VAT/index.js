@@ -290,7 +290,6 @@ export default class VAT {
 		// 	mouseCollider.setEnabled(false)
 		// })
 		addEventListener('mousemove', (event) => {
-			console.log(breakMode)
 			if (breakMode) {
 				this.mouseCollider.setEnabled(false)
 				return
