@@ -124,8 +124,18 @@ export default class VAT {
 	}
 
 	#createInteraction() {
+		let breakCount = 0
 		this.experience.interactionManager.addInteractiveObject(this.model)
-		this.model.addEventListener('click', this.#playAnim)
+		this.model.addEventListener('click', () => {
+			// this.mouseCollider.setEnabled(true)
+			// console.log(this.mouseCollider.isEnabled());
+			console.log(this.modelCollider)
+			this.modelBody.applyImpulse(new RAPIER.Vector3(0, 0, -10), true)
+			breakCount++
+			if (breakCount === 3) {
+				this.#playAnim()
+			}
+		})
 		this.model.addEventListener('mouseenter', () => {
 			toggleHoverCursor(true)
 		})
@@ -219,7 +229,7 @@ export default class VAT {
 		/**
 		 * @type {RAPIER.RigidBody} modelBody - The created dynamic rigid body.
 		 */
-		const modelBody = this.scene.physicsWorld.createRigidBody(
+		this.modelBody = this.scene.physicsWorld.createRigidBody(
 			RAPIER.RigidBodyDesc.dynamic()
 				.setTranslation(4, 4, 0)
 				.setRotation({ x: 0, y: 0, z: 0.8, w: 0.6 })
@@ -228,8 +238,8 @@ export default class VAT {
 		/**
 		 * @type {RAPIER.Collider}
 		 */
-		this.modelCollider = this.scene.physicsWorld.createCollider(modelShape, modelBody)
-		this.scene.dynamicBodies.set(this.model, modelBody)
+		this.modelCollider = this.scene.physicsWorld.createCollider(modelShape, this.modelBody)
+		this.scene.dynamicBodies.set(this.model, this.modelBody)
 
 		//joints
 		const baseJoint = RAPIER.JointData.revolute(
@@ -252,7 +262,11 @@ export default class VAT {
 			{ x: -0.1, y: 1.33, z: 0 },
 			{ x: 0, y: 0, z: 1 }
 		)
-		const ballImp = this.scene.physicsWorld.createImpulseJoint(ballJoint, lastBoneBody, modelBody)
+		const ballImp = this.scene.physicsWorld.createImpulseJoint(
+			ballJoint,
+			lastBoneBody,
+			this.modelBody
+		)
 
 		baseImp.configureMotorVelocity(0, 1e2)
 		wireImp.configureMotorVelocity(0, 1e2)
@@ -261,8 +275,8 @@ export default class VAT {
 
 		const mouseBody = this.scene.physicsWorld.createRigidBody(RAPIER.RigidBodyDesc.fixed())
 		const mouseShape = RAPIER.ColliderDesc.cuboid(0.1, 0.1, 2)
-		const mouseCollider = this.scene.physicsWorld.createCollider(mouseShape, mouseBody)
-		mouseCollider.setEnabled(false)
+		this.mouseCollider = this.scene.physicsWorld.createCollider(mouseShape, mouseBody)
+		this.mouseCollider.setEnabled(false)
 
 		const bounds = new Vector3()
 		this.experience.camera.instance.getViewSize(10, bounds)
@@ -276,11 +290,13 @@ export default class VAT {
 		// 	mouseCollider.setEnabled(false)
 		// })
 		addEventListener('mousemove', (event) => {
+			console.log(breakMode)
 			if (breakMode) {
-				mouseCollider.setEnabled(false)
+				this.mouseCollider.setEnabled(false)
 				return
 			}
-			mouseCollider.setEnabled(true)
+
+			this.mouseCollider.setEnabled(true)
 			const x = (event.clientX / window.innerWidth) * 2 - 1
 			const y = -(event.clientY / window.innerHeight) * 2 + 1
 

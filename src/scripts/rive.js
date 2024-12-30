@@ -52,6 +52,10 @@ export function setProgress(progress) {
 }
 
 export let breakMode = false
+
+export function toggleBreakMode(value) {
+	breakMode = value
+}
 function createButton() {
 	const buttonRive = new Rive({
 		src: '/rive/button.riv',
@@ -65,7 +69,7 @@ function createButton() {
 			buttonRive.getTextRunValue('label')
 			buttonRive.setTextRunValue('label', 'Break mode')
 
-			addEventListener(
+			buttonRive.canvas.addEventListener(
 				'click',
 				() => {
 					// buttonRive.stateMachineInputs('State Machine 1')[0].fire()
