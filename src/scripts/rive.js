@@ -68,7 +68,7 @@ function createButton() {
 		onLoad: () => {
 			// Ensure the drawing surface matches the canvas size and device pixel ratio
 			buttonRive.resizeDrawingSurfaceToCanvas()
-			buttonRive.setTextRunValue('label', 'Break mode')
+			buttonRive.setTextRunValue('label', 'Break this !!')
 
 			gsap.set(buttonRive.canvas, {
 				autoAlpha: 0,
@@ -101,4 +101,46 @@ export function displayButton() {
 		autoAlpha: 1,
 		duration: 0.5,
 	})
+}
+
+export function displayWriteButton() {
+	buttonRive.setTextRunValue('label', 'Write a message !')
+	gsap.to(buttonRive.canvas, {
+		autoAlpha: 1,
+		duration: 0.5,
+	})
+	buttonRive.canvas.addEventListener(
+		'click',
+		() => {
+			//focus on input make content editable
+			const content = document.querySelector('.content')
+			const author = document.querySelector('.author')
+			content.setAttribute('contenteditable', true)
+			author.setAttribute('contenteditable', true)
+			content.focus()
+
+			buttonRive.setTextRunValue('label', 'Send it !')
+			buttonRive.canvas.addEventListener('click', () => {
+				//share api
+				const message = content.innerText
+				const messageAuthor = author.innerText
+
+				if (navigator.share) {
+					navigator
+						.share({
+							title: 'Santa Booble',
+							text: message + ' by ' + messageAuthor,
+							url: document.location.href,
+						})
+						.then(() => {
+							console.log('Thanks for sharing!')
+						})
+						.catch(console.error)
+				} else {
+					console.log('Web Share API not supported')
+				}
+			})
+		},
+		{ once: true }
+	)
 }

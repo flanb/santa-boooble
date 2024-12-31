@@ -130,14 +130,16 @@ export default class VAT {
 		this.model.addEventListener('click', () => {
 			// this.mouseCollider.setEnabled(true)
 			// console.log(this.mouseCollider.isEnabled());
-			comeOnTitle()
 			this.modelBody.applyImpulse(new RAPIER.Vector3(0, 0, -10), true)
+			if (!breakMode) return
+			comeOnTitle()
 			breakCount++
 			if (breakCount === 3) {
 				this.#playAnim()
 			}
 		})
 		this.model.addEventListener('mouseenter', () => {
+			if (!breakMode) return
 			toggleHoverCursor(true)
 		})
 		this.model.addEventListener('mouseleave', () => {
@@ -281,7 +283,6 @@ export default class VAT {
 
 		const bounds = new Vector3()
 		this.experience.camera.instance.getViewSize(10, bounds)
-		console.log(bounds)
 
 		// addEventListener('mousedown', (event) => {
 		// 	//enable mouse physics

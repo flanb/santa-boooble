@@ -5,6 +5,7 @@ import { Mesh, MeshStandardMaterial, Quaternion, Vector3 } from 'three'
 import gsap from 'gsap'
 import { NearestFilter } from 'three'
 import { RepeatWrapping } from 'three'
+import { displayWriteButton } from '@/scripts/rive'
 
 export default class Paper {
 	constructor(parent) {
@@ -113,6 +114,9 @@ export default class Paper {
 			z: this.experience.camera.instance.position.z - 2.5,
 			x: -0.5,
 			y: -0.5,
+			onComplete: () => {
+				displayWriteButton()
+			},
 		})
 
 		gsap.to(this.model.rotation, {
