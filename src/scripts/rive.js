@@ -1,6 +1,7 @@
 import { EventType } from '@rive-app/canvas'
 import { Rive } from '@rive-app/canvas'
 import { gsap } from 'gsap'
+import { pushItTitle } from './title'
 
 export default function createRive() {
 	createMusic()
@@ -56,8 +57,9 @@ export let breakMode = false
 export function toggleBreakMode(value) {
 	breakMode = value
 }
+let buttonRive
 function createButton() {
-	const buttonRive = new Rive({
+	buttonRive = new Rive({
 		src: '/rive/button.riv',
 		canvas: document.getElementById('button'),
 		autoplay: true,
@@ -66,12 +68,16 @@ function createButton() {
 		onLoad: () => {
 			// Ensure the drawing surface matches the canvas size and device pixel ratio
 			buttonRive.resizeDrawingSurfaceToCanvas()
-			buttonRive.getTextRunValue('label')
 			buttonRive.setTextRunValue('label', 'Break mode')
+
+			gsap.set(buttonRive.canvas, {
+				autoAlpha: 0,
+			})
 
 			buttonRive.canvas.addEventListener(
 				'click',
 				() => {
+					pushItTitle()
 					// buttonRive.stateMachineInputs('State Machine 1')[0].fire()
 					breakMode = true
 					//delete button
@@ -87,5 +93,12 @@ function createButton() {
 				{ once: true }
 			)
 		},
+	})
+}
+
+export function displayButton() {
+	gsap.to(buttonRive.canvas, {
+		autoAlpha: 1,
+		duration: 0.5,
 	})
 }

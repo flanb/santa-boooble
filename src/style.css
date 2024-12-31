@@ -1,3 +1,14 @@
+@font-face {
+	font-family: 'Lineal';
+	src: url(/fonts/Lineal-Black.woff2) format('woff2');
+}
+
+:root {
+	--title-font: 'Lineal', sans-serif;
+	--body-font: 'Roboto', sans-serif;
+	--background-gradient: linear-gradient(to top right, #ecd4c6 0%, #e8e5e3 47%, #ecd4c6 100%);
+}
+
 * {
 	margin: 0;
 	padding: 0;
@@ -9,7 +20,7 @@ body {
 	font-family: sans-serif;
 	color: white;
 	/* rotation  -100deg #FFDEBF 0, #fff 0.4, #FFFADD 0.7 */
-	background: linear-gradient(40deg, #ffdebf 0, #fffcf0 40%, #fffadd 70%);
+	background: var(--background-gradient);
 	height: 100%;
 	cursor: none;
 }
@@ -116,7 +127,7 @@ body {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	background: linear-gradient(40deg, #ffdebf 0, #fffcf0 40%, #fffadd 70%);
+	background: var(--background-gradient);
 }
 
 #loader {
@@ -134,4 +145,18 @@ body {
 	transform: translateX(-50%);
 	width: 200px;
 	/* height: 150px; */
+}
+
+.big-title {
+	position: fixed;
+	inset: 0;
+	font-size: 300px;
+	font-family: var(--title-font);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.santa {
+	justify-self: start;
 }

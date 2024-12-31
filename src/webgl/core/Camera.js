@@ -17,10 +17,10 @@ export default class Camera {
 		 * @type {{ fov: number, frustum: { min: number, max: number }, position: Vector3, target: Vector3, currentCamera: 'sceneCamera' | 'controlsCamera' | 'fpsCamera' }}
 		 */
 		this.options = {
-			fov: 35,
+			fov: 25,
 			frustum: { min: 1, max: 100 },
-			position: new Vector3(0, 0, 10),
-			target: new Vector3(0, 0, 0),
+			position: new Vector3(0, -0.5, 10),
+			target: new Vector3(0, -0.5, 0),
 			currentCamera: 'sceneCamera',
 		}
 
@@ -36,7 +36,9 @@ export default class Camera {
 		const debugCameraTarget = JSON.parse(sessionStorage.getItem('debugCameraTarget'))
 
 		if (debugCameraPosition) {
-			camera.position.copy(new Vector3(debugCameraPosition.x, debugCameraPosition.y, debugCameraPosition.z))
+			camera.position.copy(
+				new Vector3(debugCameraPosition.x, debugCameraPosition.y, debugCameraPosition.z)
+			)
 		} else {
 			camera.position.copy(this.options.position)
 		}
@@ -44,7 +46,9 @@ export default class Camera {
 		if (debugCameraTarget) {
 			camera.lookAt(new Vector3(debugCameraTarget.x, debugCameraTarget.y, debugCameraTarget.z))
 			if (camera.controls?.target)
-				camera.controls.target.copy(new Vector3(debugCameraTarget.x, debugCameraTarget.y, debugCameraTarget.z))
+				camera.controls.target.copy(
+					new Vector3(debugCameraTarget.x, debugCameraTarget.y, debugCameraTarget.z)
+				)
 		} else {
 			camera.lookAt(this.options.target)
 		}
@@ -73,7 +77,10 @@ export default class Camera {
 		//Apply saved settings
 		this.controlsCamera.controls.addEventListener('change', () => {
 			sessionStorage.setItem('debugCameraPosition', JSON.stringify(this.controlsCamera.position))
-			sessionStorage.setItem('debugCameraTarget', JSON.stringify(this.controlsCamera.controls.target))
+			sessionStorage.setItem(
+				'debugCameraTarget',
+				JSON.stringify(this.controlsCamera.controls.target)
+			)
 		})
 
 		this.#setCameraDebugPositionAndTarget(this.controlsCamera)
@@ -180,12 +187,14 @@ export default class Camera {
 			if (this.sceneCamera.cameraHelper) this.sceneCamera.cameraHelper.update()
 		})
 
-		debugFolder.addBinding(this.options, 'frustum', { min: 0.1, max: 100, step: 0.1 }).on('change', () => {
-			this.sceneCamera.near = this.options.frustum.min
-			this.sceneCamera.far = this.options.frustum.max
-			this.sceneCamera.updateProjectionMatrix()
-			if (this.sceneCamera.cameraHelper) this.sceneCamera.cameraHelper.update()
-		})
+		debugFolder
+			.addBinding(this.options, 'frustum', { min: 0.1, max: 100, step: 0.1 })
+			.on('change', () => {
+				this.sceneCamera.near = this.options.frustum.min
+				this.sceneCamera.far = this.options.frustum.max
+				this.sceneCamera.updateProjectionMatrix()
+				if (this.sceneCamera.cameraHelper) this.sceneCamera.cameraHelper.update()
+			})
 
 		debugFolder
 			.addBlade({
@@ -229,7 +238,10 @@ export default class Camera {
 			this.scene.remove(this.controlsCamera)
 		}
 		if (this.fpsCamera) {
-			this.fpsCamera.controls.removeEventListener('change', this.fpsCamera.controls._listeners.change[0])
+			this.fpsCamera.controls.removeEventListener(
+				'change',
+				this.fpsCamera.controls._listeners.change[0]
+			)
 			this.fpsCamera.controls.dispose()
 			this.canvas.removeEventListener('click', this.fpsCamera.controls.lockControls)
 			this.scene.remove(this.fpsCamera)

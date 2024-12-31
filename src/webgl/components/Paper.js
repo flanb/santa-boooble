@@ -112,7 +112,7 @@ export default class Paper {
 			ease: 'power2.inOut',
 			z: this.experience.camera.instance.position.z - 2.5,
 			x: -0.5,
-			y: 0,
+			y: -0.5,
 		})
 
 		gsap.to(this.model.rotation, {

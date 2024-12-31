@@ -3,7 +3,7 @@ import Environment from 'components/Environment.js'
 import VAT from 'components/VAT'
 import Experience from 'core/Experience.js'
 import Resources from 'core/Resources.js'
-import { Mesh } from 'three'
+import { BufferAttribute, BufferGeometry, LineBasicMaterial, LineSegments, Mesh } from 'three'
 import sources from './sources.json'
 import Paper from '@/webgl/components/Paper'
 
@@ -70,7 +70,10 @@ export default class Main {
 			// }
 			// const { vertices, colors } = this.scene.physicsWorld.debugRender()
 			// this.lines.clear()
-			// this.lines.geometry.setAttribute('position', new BufferAttribute(new Float32Array(vertices), 3))
+			// this.lines.geometry.setAttribute(
+			// 	'position',
+			// 	new BufferAttribute(new Float32Array(vertices), 3)
+			// )
 			// this.lines.geometry.setAttribute('color', new BufferAttribute(new Float32Array(colors), 3))
 		}
 	}

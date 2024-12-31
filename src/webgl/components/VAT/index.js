@@ -6,6 +6,7 @@ import { Mesh, MeshStandardMaterial, Quaternion, Vector3 } from 'three'
 import Paper from '../Paper'
 import { breakMode } from '@/scripts/rive'
 import { toggleHoverCursor } from '@/scripts/cursor'
+import { comeOnTitle } from '@/scripts/title'
 
 export default class VAT {
 	constructor() {
@@ -129,7 +130,7 @@ export default class VAT {
 		this.model.addEventListener('click', () => {
 			// this.mouseCollider.setEnabled(true)
 			// console.log(this.mouseCollider.isEnabled());
-			console.log(this.modelCollider)
+			comeOnTitle()
 			this.modelBody.applyImpulse(new RAPIER.Vector3(0, 0, -10), true)
 			breakCount++
 			if (breakCount === 3) {
@@ -274,12 +275,13 @@ export default class VAT {
 		ballImp.configureMotorVelocity(0, 1e2)
 
 		const mouseBody = this.scene.physicsWorld.createRigidBody(RAPIER.RigidBodyDesc.fixed())
-		const mouseShape = RAPIER.ColliderDesc.cuboid(0.1, 0.1, 2)
+		const mouseShape = RAPIER.ColliderDesc.ball(0.1)
 		this.mouseCollider = this.scene.physicsWorld.createCollider(mouseShape, mouseBody)
 		this.mouseCollider.setEnabled(false)
 
 		const bounds = new Vector3()
 		this.experience.camera.instance.getViewSize(10, bounds)
+		console.log(bounds)
 
 		// addEventListener('mousedown', (event) => {
 		// 	//enable mouse physics
@@ -299,7 +301,7 @@ export default class VAT {
 			const x = (event.clientX / window.innerWidth) * 2 - 1
 			const y = -(event.clientY / window.innerHeight) * 2 + 1
 
-			const vector = new Vector3(x * (bounds.x / 2), y * (bounds.y / 2), 0)
+			const vector = new Vector3(x * (bounds.x / 2), y * (bounds.y / 2) - 0.5, 0)
 
 			mouseBody.setTranslation(vector)
 		})
