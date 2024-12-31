@@ -1,5 +1,5 @@
 import Experience from 'core/Experience.js'
-import { EquirectangularReflectionMapping } from 'three'
+import { EquirectangularReflectionMapping, PMREMGenerator, RectAreaLight } from 'three'
 import { DirectionalLight, Mesh, MeshStandardMaterial, SRGBColorSpace } from 'three'
 import addObjectDebug from 'utils/addObjectDebug.js'
 
@@ -23,29 +23,37 @@ export default class Environment {
 	}
 
 	setSunLight() {
-		this.sunLight = new DirectionalLight('#ffffff', 4)
-		this.sunLight.castShadow = true
-		this.sunLight.shadow.camera.far = 15
-		this.sunLight.shadow.mapSize.set(1024, 1024)
-		this.sunLight.shadow.normalBias = 0.05
-		this.sunLight.position.set(3.5, 2, -1.25)
+		this.sunLight = new RectAreaLight('#ffffff', 4)
+		this.sunLight.position.set(-6, 2, -1.25)
+		this.sunLight.lookAt(0, 0, 0)
 		this.sunLight.name = 'sunLight'
 		this.scene.add(this.sunLight)
+
+		this.backLight = new RectAreaLight('#ffffff', 10)
+		this.backLight.position.set(4, -10, 1)
+		this.backLight.lookAt(0, 0, 0)
+		this.backLight.name = 'backLight'
+		this.scene.add(this.backLight)
 
 		// Debug
 		if (this.debug.active) {
 			const debugFolder = addObjectDebug(this.environmentDebugFolder, this.sunLight)
+			addObjectDebug(this.environmentDebugFolder, this.backLight)
 		}
 	}
 
 	setEnvironmentMap() {
 		this.environmentMap = {}
-		// this.environmentMap.intensity = 0.4
+		// this.environmentMap.intensity = 2
 		this.environmentMap.texture = this.resources.items.environmentMapTexture
-		this.environmentMap.texture.encoding = SRGBColorSpace
-		this.environmentMap.texture.mapping = EquirectangularReflectionMapping
+		// this.environmentMap.texture.encoding = SRGBColorSpace
+		// this.environmentMap.texture.mapping = EquirectangularReflectionMapping
 
-		this.scene.environment = this.environmentMap.texture
+		const pmremGenerator = new PMREMGenerator(this.experience.renderer.instance)
+		const envMap = pmremGenerator.fromEquirectangular(this.environmentMap.texture).texture
+		this.environmentMap.texture.dispose()
+
+		this.scene.environment = envMap
 		// this.scene.background = this.environmentMap.texture
 
 		// this.environmentMap.updateMaterials = () => {

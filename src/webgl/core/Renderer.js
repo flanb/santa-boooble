@@ -21,7 +21,7 @@ export default class Renderer {
 		})
 		this.instance.outputColorSpace = SRGBColorSpace
 		this.instance.toneMapping = CineonToneMapping
-		this.instance.toneMappingExposure = 1.75
+		// this.instance.toneMappingExposure = 1.75
 		// this.instance.shadowMap.enabled = true
 		// this.instance.shadowMap.type = PCFSoftShadowMap
 		// this.instance.setClearColor('#211d20')
