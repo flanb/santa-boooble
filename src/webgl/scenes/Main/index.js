@@ -39,21 +39,33 @@ export default class Main {
 		)
 		const groundShape = RAPIER.ColliderDesc.cuboid(10, 1, 10)
 		this.scene.physicsWorld.createCollider(groundShape, groundBody)
+
+		setInterval(() => {
+			requestAnimationFrame(() => {
+				this.scene.physicsWorld.step()
+			})
+		}, 1000 / 60)
 	}
 
 	update() {
 		if (this.vat) this.vat.update()
 
+		if (this.experience.gimbal.isEnable && this.scene.physicsWorld) {
+			//change gravity
+			const gravity = new RAPIER.Vector3(-this.experience.gimbal.yaw * 5, -9.81, 0)
+
+			this.scene.physicsWorld.gravity = gravity
+		}
+
 		// Update physics
 		if (this.scene.physicsWorld) {
-			this.scene.physicsWorld.step()
-
 			this.scene.dynamicBodies.forEach((body, mesh) => {
 				const parent = mesh.parent
 				this.scene.attach(mesh)
 				const translation = body.translation()
 				mesh.position.copy(translation)
 
+				if (mesh.noRotation) return
 				const rotation = body.rotation()
 				mesh.quaternion.set(rotation.x, rotation.y, rotation.z, rotation.w)
 				parent.attach(mesh)

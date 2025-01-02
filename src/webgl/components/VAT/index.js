@@ -7,6 +7,7 @@ import Paper from '../Paper'
 import { breakMode } from '@/scripts/rive'
 import { toggleHoverCursor } from '@/scripts/cursor'
 import { comeOnTitle } from '@/scripts/title'
+import gsap from 'gsap'
 
 export default class VAT {
 	constructor() {
@@ -155,23 +156,26 @@ export default class VAT {
 		paper.quaternion.copy(this.model.quaternion)
 		paper.class.play()
 
-		// this.scene.physicsWorld.removeCollider(this.modelCollider)
-		// this.scene.dynamicBodies.delete(this.model)
-		this.model.quaternion.set(0, 0, 0, 1)
+		this.modelBody.setEnabledRotations(false, true, true)
 
 		const totalFrames = getUniform(this.material, 'totalFrames').value - 15
 		const fps = getUniform(this.material, 'fps').value
 		const duration = totalFrames / fps
 
-		const startTime = this.experience.time.elapsed
-		const animate = () => {
-			const elapsedTime = (this.experience.time.elapsed - startTime) / 2000
-			setUniform(this.material, 'uTime', elapsedTime)
-			if (elapsedTime < duration) {
-				requestAnimationFrame(animate)
-			}
-		}
-		requestAnimationFrame(animate)
+		gsap.to(getUniform(this.material, 'uTime'), {
+			value: duration,
+			duration: 3,
+		})
+
+		// const startTime = this.experience.time.elapsed
+		// const animate = () => {
+		// 	const elapsedTime = (this.experience.time.elapsed - startTime) / 2000
+		// 	setUniform(this.material, 'uTime', elapsedTime)
+		// 	if (elapsedTime < duration) {
+		// 		requestAnimationFrame(animate)
+		// 	}
+		// }
+		// requestAnimationFrame(animate)
 	}
 
 	#createPhysics() {
@@ -228,14 +232,17 @@ export default class VAT {
 
 		this.scene.physicsWorld.createCollider(lastBoneShape, lastBoneBody)
 		this.scene.dynamicBodies.set(lastBone, lastBoneBody)
+		const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
 
 		/**
 		 * @type {RAPIER.RigidBody} modelBody - The created dynamic rigid body.
 		 */
 		this.modelBody = this.scene.physicsWorld.createRigidBody(
-			RAPIER.RigidBodyDesc.dynamic()
-				.setTranslation(4, 4, 0)
-				.setRotation({ x: 0, y: 0, z: 0.8, w: 0.6 })
+			isMobile
+				? RAPIER.RigidBodyDesc.dynamic()
+				: RAPIER.RigidBodyDesc.dynamic()
+						.setTranslation(4, 4, 0)
+						.setRotation({ x: 0, y: 0, z: 0.8, w: 0.6 })
 		)
 		const modelShape = RAPIER.ColliderDesc.ball(1).setTranslation(-0.1, -0.2, 0).setMass(1)
 		/**
@@ -276,13 +283,31 @@ export default class VAT {
 		wireImp.setLimits(-1, 1)
 		ballImp.configureMotorVelocity(0, 1e2)
 
+		const bounds = new Vector3()
+		this.experience.camera.instance.getViewSize(10, bounds)
+
+		console.log(bounds)
+
+		if (isMobile) {
+			// create wall collider
+			const wallBody = this.scene.physicsWorld.createRigidBody(
+				RAPIER.RigidBodyDesc.fixed().setTranslation(-bounds.x / 2 - 3, 0, 0)
+			)
+			const wallShape = RAPIER.ColliderDesc.cuboid(1, 10, 1).setTranslation(0, 0, 0)
+			this.scene.physicsWorld.createCollider(wallShape, wallBody)
+			const wallBody2 = this.scene.physicsWorld.createRigidBody(
+				RAPIER.RigidBodyDesc.fixed().setTranslation(bounds.x / 2 + 3, 0, 0)
+			)
+			const wallShape2 = RAPIER.ColliderDesc.cuboid(1, 10, 1).setTranslation(0, 0, 0)
+			this.scene.physicsWorld.createCollider(wallShape2, wallBody2)
+
+			return
+		}
+
 		const mouseBody = this.scene.physicsWorld.createRigidBody(RAPIER.RigidBodyDesc.fixed())
 		const mouseShape = RAPIER.ColliderDesc.ball(0.1)
 		this.mouseCollider = this.scene.physicsWorld.createCollider(mouseShape, mouseBody)
 		this.mouseCollider.setEnabled(false)
-
-		const bounds = new Vector3()
-		this.experience.camera.instance.getViewSize(10, bounds)
 
 		// addEventListener('mousedown', (event) => {
 		// 	//enable mouse physics

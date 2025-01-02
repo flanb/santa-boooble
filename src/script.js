@@ -8,3 +8,11 @@ const experience = new Experience(document.querySelector('canvas#webgl'))
 createCursor()
 createRive()
 createTitle()
+
+const permissionButton = document.querySelector('.permission')
+if (permissionButton)
+	permissionButton.addEventListener('click', () => {
+		experience.gimbal.enable()
+		permissionButton.remove()
+		document.querySelector('.permission-container').remove()
+	})

@@ -31,12 +31,15 @@ export default class InteractionManager {
 			}
 		})
 
-		addEventListener('click', (event) => {
+		const handleClick = (event) => {
 			if (!this.intersectsObjects.length) return
 			this.intersectsObjects.forEach((object) => {
 				object.dispatchEvent({ type: 'click' })
 			})
-		})
+		}
+
+		addEventListener('click', handleClick)
+		addEventListener('touchend', handleClick)
 
 		addEventListener('mousedown', (event) => {
 			if (!this.intersectsObjects.length) return

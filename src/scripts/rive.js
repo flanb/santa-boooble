@@ -74,24 +74,22 @@ function createButton() {
 				autoAlpha: 0,
 			})
 
-			buttonRive.canvas.addEventListener(
-				'click',
-				() => {
-					pushItTitle()
-					// buttonRive.stateMachineInputs('State Machine 1')[0].fire()
-					breakMode = true
-					//delete button
-					gsap.to(buttonRive.canvas, {
-						autoAlpha: 0,
-						duration: 0.5,
-						onComplete: () => {
-							// buttonRive.cleanup()
-							// buttonRive.canvas.remove()
-						},
-					})
-				},
-				{ once: true }
-			)
+			const click = () => {
+				pushItTitle()
+				// buttonRive.stateMachineInputs('State Machine 1')[0].fire()
+				breakMode = true
+				//delete button
+				gsap.to(buttonRive.canvas, {
+					autoAlpha: 0,
+					duration: 0.5,
+					onComplete: () => {
+						// buttonRive.cleanup()
+						// buttonRive.canvas.remove()
+					},
+				})
+			}
+			buttonRive.canvas.addEventListener('touchend', click, { once: true })
+			buttonRive.canvas.addEventListener('click', click, { once: true })
 		},
 	})
 }
@@ -109,38 +107,40 @@ export function displayWriteButton() {
 		autoAlpha: 1,
 		duration: 0.5,
 	})
-	buttonRive.canvas.addEventListener(
-		'click',
-		() => {
-			//focus on input make content editable
-			const content = document.querySelector('.content')
-			const author = document.querySelector('.author')
-			content.setAttribute('contenteditable', true)
-			author.setAttribute('contenteditable', true)
-			content.focus()
 
-			buttonRive.setTextRunValue('label', 'Send it !')
-			buttonRive.canvas.addEventListener('click', () => {
-				//share api
-				const message = content.innerText
-				const messageAuthor = author.innerText
+	const firstClick = () => {
+		//focus on input make content editable
+		const content = document.querySelector('.content')
+		const author = document.querySelector('.author')
+		content.setAttribute('contenteditable', true)
+		author.setAttribute('contenteditable', true)
+		content.focus()
 
-				if (navigator.share) {
-					navigator
-						.share({
-							title: 'Santa Booble',
-							text: message + ' by ' + messageAuthor,
-							url: document.location.href,
-						})
-						.then(() => {
-							console.log('Thanks for sharing!')
-						})
-						.catch(console.error)
-				} else {
-					console.log('Web Share API not supported')
-				}
-			})
-		},
-		{ once: true }
-	)
+		buttonRive.setTextRunValue('label', 'Send it !')
+
+		const secondClick = () => {
+			//share api
+			const message = content.innerText
+			const messageAuthor = author.innerText
+
+			if (navigator.share) {
+				navigator
+					.share({
+						title: 'Santa Booble',
+						text: message + ' by ' + messageAuthor,
+						url: document.location.href,
+					})
+					.then(() => {
+						console.log('Thanks for sharing!')
+					})
+					.catch(console.error)
+			} else {
+				console.log('Web Share API not supported')
+			}
+		}
+		buttonRive.canvas.addEventListener('click', secondClick)
+		buttonRive.canvas.addEventListener('touchend', secondClick)
+	}
+	buttonRive.canvas.addEventListener('click', firstClick, { once: true })
+	buttonRive.canvas.addEventListener('touchend', firstClick, { once: true })
 }

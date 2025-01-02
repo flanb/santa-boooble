@@ -6,6 +6,7 @@ import Renderer from './Renderer.js'
 import SceneManager from 'core/SceneManager.js'
 import { Mesh, Scene } from 'three'
 import InteractionManager from 'core/InteractionManager.js'
+import Gimbal from '../utils/Gimball.js'
 
 let instance = null
 
@@ -32,6 +33,7 @@ export default class Experience {
 		this.interactionManager = new InteractionManager(this.camera.instance)
 		this.activeScene = new SceneManager()
 		this.renderer = new Renderer()
+		this.gimbal = new Gimbal()
 
 		// Resize event
 		this.sizes.on('resize', () => {
@@ -54,6 +56,7 @@ export default class Experience {
 		this.renderer.update()
 		this.debug.update()
 		this.interactionManager.update()
+		this.gimbal.update()
 	}
 
 	destroy() {

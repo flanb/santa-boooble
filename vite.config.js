@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import glslify from 'vite-plugin-glslify'
 import path from 'path'
+import viteBasicSslPlugin from '@vitejs/plugin-basic-ssl'
 
 export default defineConfig({
 	root: 'src',
@@ -18,5 +19,5 @@ export default defineConfig({
 			core: path.resolve(__dirname, 'src/webgl/core'),
 		},
 	},
-	plugins: [glslify.glslify()],
+	plugins: [glslify.glslify(), viteBasicSslPlugin()],
 })

@@ -5,7 +5,7 @@
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
-		"dev": "vite --port 3000",
+		"dev": "vite --port 3000 --host",
 		"build": "vite build",
 		"preview": "vite preview"
 	},
@@ -19,6 +19,7 @@
 		"@tweakpane/core": "^2.0.5",
 		"@tweakpane/plugin-essentials": "0.2.1",
 		"@types/three": "^0.171.0",
+		"@vitejs/plugin-basic-ssl": "^1.2.0",
 		"stats.js": "^0.17.0",
 		"tweakpane": "^4.0.5",
 		"tweakpane-plugin-file-import": "^1.1.1",
