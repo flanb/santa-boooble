@@ -123,19 +123,20 @@ export function displayWriteButton() {
 			const message = content.innerText
 			const messageAuthor = author.innerText
 
-			if (navigator.share) {
+			const url = new URL(location.href)
+			url.searchParams.append('m', btoa(message))
+			url.searchParams.append('a', btoa(messageAuthor))
+
+			const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+			if (navigator.share && isMobile) {
 				navigator
 					.share({
-						title: 'Santa Booble',
-						text: message + ' by ' + messageAuthor,
-						url: document.location.href,
-					})
-					.then(() => {
-						console.log('Thanks for sharing!')
+						url,
 					})
 					.catch(console.error)
 			} else {
-				console.log('Web Share API not supported')
+				navigator.clipboard.writeText(url)
+				alert('url copied')
 			}
 		}
 		buttonRive.canvas.addEventListener('click', secondClick)

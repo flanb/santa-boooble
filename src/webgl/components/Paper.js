@@ -107,11 +107,17 @@ export default class Paper {
 			delay: 0.5,
 		})
 
+		let z = 0
+		if (this.experience.sizes.width < 768) {
+			z = this.experience.camera.instance.position.z - 7
+		} else {
+			z = this.experience.camera.instance.position.z - 3
+		}
 		// model get close to the camera
 		gsap.to(this.model.position, {
 			duration: 2,
 			ease: 'power2.inOut',
-			z: this.experience.camera.instance.position.z - 2.5,
+			z,
 			x: -0.5,
 			y: -0.5,
 			onComplete: () => {
