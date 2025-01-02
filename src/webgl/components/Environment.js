@@ -1,7 +1,8 @@
 import Experience from 'core/Experience.js'
-import { EquirectangularReflectionMapping, PMREMGenerator, RectAreaLight } from 'three'
+import { EquirectangularReflectionMapping, PMREMGenerator, RectAreaLight, SpotLight } from 'three'
 import { DirectionalLight, Mesh, MeshStandardMaterial, SRGBColorSpace } from 'three'
 import addObjectDebug from 'utils/addObjectDebug.js'
+import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js'
 
 export default class Environment {
 	constructor() {
@@ -23,14 +24,15 @@ export default class Environment {
 	}
 
 	setSunLight() {
+		RectAreaLightUniformsLib.init()
 		this.sunLight = new RectAreaLight('#ffffff', 4)
-		this.sunLight.position.set(-6, 2, -1.25)
+		this.sunLight.position.set(-12, 4, -4)
 		this.sunLight.lookAt(0, 0, 0)
 		this.sunLight.name = 'sunLight'
 		this.scene.add(this.sunLight)
 
 		this.backLight = new RectAreaLight('#ffffff', 10)
-		this.backLight.position.set(4, -10, 1)
+		this.backLight.position.set(15, -0, 2)
 		this.backLight.lookAt(0, 0, 0)
 		this.backLight.name = 'backLight'
 		this.scene.add(this.backLight)

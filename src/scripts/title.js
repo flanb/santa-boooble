@@ -40,6 +40,7 @@ export default async function createTitle() {
 	currentTitle++
 	gsap.set(titles, { display: 'none' })
 	gsap.set(titles[currentTitle], { display: '' })
+	titles[currentTitle].innerHTML = 'SANTA BOOOBLE'
 	await gsap.fromTo(
 		titles[currentTitle],
 		{
@@ -51,10 +52,12 @@ export default async function createTitle() {
 			ease: 'power1.inOut',
 			onComplete: () => {
 				// replace one o by space
-				console.log(titles[currentTitle].innerHTML)
+				const before = 'SANTA BOOOBLE'
+				if (before === titles[currentTitle].innerHTML) {
+					return
+				}
 				titles[currentTitle].innerHTML = titles[currentTitle].innerHTML.replace('O', '')
 				const interval = setInterval(() => {
-					const before = 'SANTA BOOOBLE'
 					titles[currentTitle].innerHTML = titles[currentTitle].innerHTML.replace('O', '')
 					if (before === titles[currentTitle].innerHTML) {
 						clearInterval(interval)
