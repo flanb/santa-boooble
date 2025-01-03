@@ -109,7 +109,7 @@ export default class Paper {
 
 		let z = 0
 		if (this.experience.sizes.width < 768) {
-			z = this.experience.camera.instance.position.z - 5
+			z = this.experience.camera.instance.position.z - 6
 		} else {
 			z = this.experience.camera.instance.position.z - 3
 		}
@@ -118,7 +118,7 @@ export default class Paper {
 			duration: 2,
 			ease: 'power2.inOut',
 			z,
-			x: -0.75,
+			x: -0.55,
 			y: -0.5,
 			onComplete: () => {
 				displayWriteButton()

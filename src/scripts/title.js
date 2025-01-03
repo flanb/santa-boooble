@@ -40,7 +40,14 @@ export default async function createTitle() {
 	currentTitle++
 	gsap.set(titles, { display: 'none' })
 	gsap.set(titles[currentTitle], { display: '' })
-	titles[currentTitle].innerHTML = 'SANTA BOOOBLE'
+
+	const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+		navigator.userAgent
+	)
+	if (isMobile) {
+		titles[currentTitle].innerHTML = 'SANTA BOOOBLE'
+	}
+
 	await gsap.fromTo(
 		titles[currentTitle],
 		{
