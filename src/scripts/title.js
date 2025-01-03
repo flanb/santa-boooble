@@ -54,6 +54,7 @@ export default async function createTitle() {
 				// replace one o by space
 				const before = 'SANTA BOOOBLE'
 				if (before === titles[currentTitle].innerHTML) {
+					displayButton()
 					return
 				}
 				titles[currentTitle].innerHTML = titles[currentTitle].innerHTML.replace('O', '')
