@@ -131,10 +131,12 @@ export default class VAT {
 		this.model.addEventListener('click', () => {
 			// this.mouseCollider.setEnabled(true)
 			// console.log(this.mouseCollider.isEnabled());
-			this.modelBody.applyImpulse(new RAPIER.Vector3(0, 0, -10), true)
+			this.modelBody.applyImpulse(new RAPIER.Vector3(0, 0, -5), true)
 			if (!breakMode) return
-			comeOnTitle()
 			breakCount++
+			if (breakCount === 2) {
+				comeOnTitle()
+			}
 			if (breakCount === 3) {
 				this.#playAnim()
 			}

@@ -76,7 +76,10 @@ function createButton() {
 
 			const click = () => {
 				pushItTitle()
-				// buttonRive.stateMachineInputs('State Machine 1')[0].fire()
+
+				// setTimeout(() => {
+				// 	buttonRive.stateMachineInputs('State Machine 1')[1].value = false
+				// }, 500)
 				breakMode = true
 				//delete button
 				gsap.to(buttonRive.canvas, {
@@ -115,6 +118,9 @@ export function displayWriteButton() {
 		content.setAttribute('contenteditable', true)
 		author.setAttribute('contenteditable', true)
 		content.focus()
+		// setTimeout(() => {
+		// 	buttonRive.stateMachineInputs('State Machine 1')[1].value = false
+		// }, 500)
 
 		buttonRive.setTextRunValue('label', 'Send it !')
 
@@ -122,7 +128,9 @@ export function displayWriteButton() {
 			//share api
 			const message = content.innerText
 			const messageAuthor = author.innerText
-
+			// setTimeout(() => {
+			// 	buttonRive.stateMachineInputs('State Machine 1')[1].value = false
+			// }, 500)
 			const url = new URL(location.href)
 			url.searchParams.append('m', btoa(message))
 			url.searchParams.append('a', btoa(messageAuthor))

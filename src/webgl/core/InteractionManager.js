@@ -21,26 +21,45 @@ export default class InteractionManager {
 	}
 
 	#setEvents() {
-		addEventListener('mousemove', (event) => {
-			this.pointer.x = (event.clientX / this.sizes.width) * 2 - 1
-			this.pointer.y = -(event.clientY / this.sizes.height) * 2 + 1
+		const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+			navigator.userAgent
+		)
+		const handleMove = (event) => {
+			if (event.touches) {
+				this.pointer.x = (event.touches[0].clientX / this.sizes.width) * 2 - 1
+				this.pointer.y = -(event.touches[0].clientY / this.sizes.height) * 2 + 1
+			} else {
+				this.pointer.x = (event.clientX / this.sizes.width) * 2 - 1
+				this.pointer.y = -(event.clientY / this.sizes.height) * 2 + 1
+			}
+
 			this.needsUpdate = true
 
 			if (this.dragObject) {
 				this.dragObject.dispatchEvent({ type: 'drag', mouseEvent: event })
 			}
-		})
+		}
+		if (isMobile) {
+			addEventListener('touchmove', handleMove)
+		} else {
+			addEventListener('mousemove', handleMove)
+		}
 
 		const handleClick = (event) => {
+			handleMove(event)
+
+			this.update()
 			if (!this.intersectsObjects.length) return
 			this.intersectsObjects.forEach((object) => {
 				object.dispatchEvent({ type: 'click' })
 			})
 		}
 
-		addEventListener('click', handleClick)
-		addEventListener('touchend', handleClick)
-
+		if (isMobile) {
+			addEventListener('touchstart', handleClick)
+		} else {
+			addEventListener('click', handleClick)
+		}
 		addEventListener('mousedown', (event) => {
 			if (!this.intersectsObjects.length) return
 			this.intersectsObjects.forEach((object) => {

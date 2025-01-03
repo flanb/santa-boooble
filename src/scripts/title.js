@@ -72,7 +72,7 @@ export default async function createTitle() {
 
 export async function pushItTitle() {
 	gsap.to(titles[currentTitle], {
-		x: '-100%',
+		x: '-110%',
 		duration: 1,
 	})
 
