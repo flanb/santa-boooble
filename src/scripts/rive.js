@@ -2,10 +2,10 @@ import { EventType } from '@rive-app/canvas'
 import { Rive } from '@rive-app/canvas'
 import { gsap } from 'gsap'
 import { pushItTitle } from './title'
+import { lerp } from 'three/src/math/MathUtils'
 
 export default function createRive() {
 	createMusic()
-	createLoader()
 	createButton()
 }
 
@@ -28,29 +28,50 @@ function createMusic() {
 	})
 }
 
-let progressInput
-function createLoader() {
-	const loaderRive = new Rive({
-		src: '/rive/loader.riv',
-		canvas: document.getElementById('loader'),
-		autoplay: true,
-		stateMachines: 'State Machine 1',
-		onLoad: () => {
-			// Ensure the drawing surface matches the canvas size and device pixel ratio
-			loaderRive.resizeDrawingSurfaceToCanvas()
-			const inputs = loaderRive.stateMachineInputs('State Machine 1')
-			progressInput = inputs[0]
-		},
-	})
+// let progressInput
+// function createLoader() {
+// 	const loaderRive = new Rive({
+// 		src: '/rive/loader.riv',
+// 		canvas: document.getElementById('loader'),
+// 		autoplay: true,
+// 		stateMachines: 'State Machine 1',
+// 		onLoad: () => {
+// 			// Ensure the drawing surface matches the canvas size and device pixel ratio
+// 			loaderRive.resizeDrawingSurfaceToCanvas()
+// 			const inputs = loaderRive.stateMachineInputs('State Machine 1')
+// 			progressInput = inputs[0]
+// 		},
+// 	})
+// }
+
+const waveElement = document.querySelector('.wave')
+const loaderSvgElement = document.querySelector('.loader-svg')
+let targetWaveProgress = 0
+export function setProgress(progress) {
+	console.dir(waveElement)
+	targetWaveProgress = progress
 }
 
-export function setProgress(progress) {
-	if (progressInput) {
-		progressInput.value = progress
+function waveProgressTick() {
+	waveElement.style.setProperty(
+		'--wave-progress',
+		lerp(waveElement.style.getPropertyValue('--wave-progress'), targetWaveProgress, 0.1)
+	)
+
+	if (waveElement.style.getPropertyValue('--wave-progress') < 0.99) {
+		requestAnimationFrame(waveProgressTick)
 	} else {
-		console.warn('Progress input not found')
+		loaderSvgElement.classList.add('rotate-anim')
+
+		gsap.to(['.star3', '.star2', '.star1'], {
+			keyframes: {
+				autoAlpha: [0, 1, 0],
+			},
+			stagger: 0.1,
+		})
 	}
 }
+requestAnimationFrame(waveProgressTick)
 
 export let breakMode = false
 

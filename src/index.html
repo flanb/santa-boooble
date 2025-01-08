@@ -4,7 +4,7 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Threejs Starter</title>
-		<link rel="stylesheet" href="./style.css" />
+		<link rel="stylesheet" href="./style.scss" />
 		<script type="module" src="./script.js" defer></script>
 	</head>
 	<body>
@@ -22,7 +22,86 @@
 		<canvas id="music_button"></canvas>
 		<canvas id="button"></canvas>
 		<div class="loader-container">
-			<canvas id="loader"></canvas>
+			<div class="loader-wrapper">
+				<img src="./star.svg" alt="star" class="star1" />
+				<img src="./star.svg" alt="star" class="star2" />
+				<img src="./star.svg" alt="star" class="star3" />
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					xmlns:xlink="http://www.w3.org/1999/xlink"
+					width="101"
+					height="128"
+					class="loader-svg"
+				>
+					<defs>
+						<path
+							id="b"
+							fill="#2C2C2C"
+							d="M40.77 28.98a10.31 10.31 0 0 0-9.43-7.94 11.8 11.8 0 1 0-7.6 2.71 10.32 10.32 0 0 0-1.6 13.3 50 50 0 0 0 48.64 86.76 49.99 49.99 0 0 0-30-94.83Z"
+						/>
+					</defs>
+					<g clip-path="url(#a)">
+						<mask
+							id="c"
+							width="101"
+							height="128"
+							x="0"
+							y="0"
+							maskUnits="userSpaceOnUse"
+							style="mask-type: alpha"
+						>
+							<use xlink:href="#b" />
+						</mask>
+						<g mask="url(#c)">
+							<use xlink:href="#b" />
+							<mask
+								id="d"
+								width="294"
+								height="151"
+								x="1"
+								y="-23"
+								maskUnits="userSpaceOnUse"
+								style="mask-type: alpha"
+							>
+								<path
+									class="wave"
+									fill="#fff"
+									d="M1-23v151h294V-23C253.6-23 253.6-.34 221.5-.34S189.38-23 148-23C106.6-23 106.6-.34 74.5-.34S42.38-23 1-23Z"
+								/>
+							</mask>
+							<g mask="url(#d)">
+								<circle
+									cx="50.93"
+									cy="78.2"
+									r="50.2"
+									fill="#F10000"
+									transform="rotate(-28 50.93 78.2)"
+								/>
+								<circle
+									cx="31.52"
+									cy="33.52"
+									r="12.96"
+									fill="#FFBF00"
+									transform="rotate(-28 31.52 33.52)"
+								/>
+								<path
+									fill="#FFBF00"
+									fill-rule="evenodd"
+									d="M29.68 18.66a8.91 8.91 0 0 0 .87-12.57 8.91 8.91 0 0 0-12.57-.99 8.91 8.91 0 0 0-.86 12.57 8.91 8.91 0 0 0 12.56 1Zm2 2.33A11.97 11.97 0 0 0 32.85 4.1a11.97 11.97 0 0 0-16.87-1.32 11.97 11.97 0 0 0-1.16 16.88 11.97 11.97 0 0 0 16.86 1.33Z"
+									clip-rule="evenodd"
+								/>
+								<path
+									fill="#fff"
+									d="M30.55 6.09a8.91 8.91 0 0 1-.87 12.57 8.91 8.91 0 0 1-12.56-.99 8.91 8.91 0 0 1 .86-12.57 8.91 8.91 0 0 1 12.57.99Z"
+								/>
+							</g>
+						</g>
+					</g>
+					<defs>
+						<clipPath id="a"><path fill="#fff" d="M.91.16h100v127.78H.91z" /></clipPath>
+					</defs>
+				</svg>
+			</div>
 		</div>
 		<div class="cursor-container">
 			<img draggable="false" src="cursor.svg" alt="cursor" class="cursor" />

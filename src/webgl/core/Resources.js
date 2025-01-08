@@ -163,7 +163,7 @@ export default class Resources extends EventEmitter {
 				'font-weight: bold',
 				'font-weight: normal'
 			)
-		setProgress((this.loaded / this.toLoad) * 100)
+		setProgress(this.loaded / this.toLoad)
 		if (this.loadingScreenElement) {
 			this.loadingBarElement.style.transform = `scaleX(${this.loaded / this.toLoad})`
 		}
@@ -176,9 +176,11 @@ export default class Resources extends EventEmitter {
 				console.groupEnd()
 			}
 			if (this.loadingScreenElement) this.loadingScreenElement.remove()
-			this.trigger('ready')
+			setTimeout(() => {
+				this.trigger('ready')
 
-			gsap.to('.loader-container', { autoAlpha: 0, duration: 1, ease: 'power1.in' })
+				gsap.to('.loader-container', { autoAlpha: 0, duration: 1, ease: 'power1.in' })
+			}, 1100)
 		}
 	}
 }

@@ -20,6 +20,8 @@
 		"@tweakpane/plugin-essentials": "0.2.1",
 		"@types/three": "^0.171.0",
 		"@vitejs/plugin-basic-ssl": "^1.2.0",
+		"sass-embedded": "^1.83.1",
+		"scss": "^0.2.4",
 		"stats.js": "^0.17.0",
 		"tweakpane": "^4.0.5",
 		"tweakpane-plugin-file-import": "^1.1.1",

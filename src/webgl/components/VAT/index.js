@@ -281,14 +281,12 @@ export default class VAT {
 		)
 
 		baseImp.configureMotorVelocity(0, 1e2)
-		wireImp.configureMotorVelocity(0, 1e2)
+		// wireImp.configureMotorVelocity(0, 1e2)
 		wireImp.setLimits(-1, 1)
-		ballImp.configureMotorVelocity(0, 1e2)
+		ballImp.configureMotorVelocity(0, 1e1)
 
 		const bounds = new Vector3()
 		this.experience.camera.instance.getViewSize(10, bounds)
-
-		console.log(bounds)
 
 		if (isMobile) {
 			// create wall collider
