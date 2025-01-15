@@ -3,6 +3,7 @@ import { Rive } from '@rive-app/canvas'
 import { gsap } from 'gsap'
 import { pushItTitle } from './title'
 import { lerp } from 'three/src/math/MathUtils'
+import { displayCursorInput, displayCursorTextarea, updatePaperCanvas } from '@/script'
 
 export default function createRive() {
 	createMusic()
@@ -23,7 +24,7 @@ function createMusic() {
 
 	musicRive.on(EventType.RiveEvent, ({ data }) => {
 		if (data.name === 'ClickEvent') {
-			console.log('audio')
+			// console.log('audio')
 		}
 	})
 }
@@ -48,7 +49,6 @@ const waveElement = document.querySelector('.wave')
 const loaderSvgElement = document.querySelector('.loader-svg')
 let targetWaveProgress = 0
 export function setProgress(progress) {
-	console.dir(waveElement)
 	targetWaveProgress = progress
 }
 
@@ -134,42 +134,63 @@ export function displayWriteButton() {
 
 	const firstClick = () => {
 		//focus on input make content editable
-		const content = document.querySelector('.content')
-		const author = document.querySelector('.author')
-		content.setAttribute('contenteditable', true)
-		author.setAttribute('contenteditable', true)
-		content.focus()
+		const textareaElement = document.querySelector('.paper-canvas textarea')
+		const inputElement = document.querySelector('.paper-canvas input')
+		textareaElement.focus()
+		textareaElement.value = ''
+		textareaElement.dispatchEvent(new Event('input'))
+		displayCursorTextarea()
 		// setTimeout(() => {
 		// 	buttonRive.stateMachineInputs('State Machine 1')[1].value = false
 		// }, 500)
 
-		buttonRive.setTextRunValue('label', 'Send it !')
+		buttonRive.setTextRunValue('label', 'Sign !')
 
 		const secondClick = () => {
-			//share api
-			const message = content.innerText
-			const messageAuthor = author.innerText
-			// setTimeout(() => {
-			// 	buttonRive.stateMachineInputs('State Machine 1')[1].value = false
-			// }, 500)
-			const url = new URL(location.href)
-			url.searchParams.append('m', btoa(message))
-			url.searchParams.append('a', btoa(messageAuthor))
+			gsap.set('.paper-canvas textarea', {
+				display: 'none',
+			})
+			gsap.set('.paper-canvas input', {
+				display: 'block',
+			})
+			inputElement.focus()
+			inputElement.value = ''
+			inputElement.dispatchEvent(new Event('input'))
+			displayCursorTextarea(false)
+			displayCursorInput()
 
-			const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
-			if (navigator.share && isMobile) {
-				navigator
-					.share({
-						url,
-					})
-					.catch(console.error)
-			} else {
-				navigator.clipboard.writeText(url)
-				alert('url copied')
+			buttonRive.setTextRunValue('label', 'Share !')
+
+			const thirdClick = () => {
+				//share api
+				const message = textareaElement.value
+				const messageAuthor = inputElement.value
+				// setTimeout(() => {
+				// 	buttonRive.stateMachineInputs('State Machine 1')[1].value = false
+				// }, 500)
+				const url = new URL(location.href)
+				url.searchParams.append('m', btoa(message))
+				url.searchParams.append('a', btoa(messageAuthor))
+
+				const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+				if (navigator.share && isMobile) {
+					navigator
+						.share({
+							url,
+						})
+						.catch(console.error)
+				} else {
+					navigator.clipboard.writeText(url)
+					alert('url copied')
+				}
 			}
+
+			buttonRive.canvas.addEventListener('click', thirdClick)
+			buttonRive.canvas.addEventListener('touchend', thirdClick)
 		}
-		buttonRive.canvas.addEventListener('click', secondClick)
-		buttonRive.canvas.addEventListener('touchend', secondClick)
+
+		buttonRive.canvas.addEventListener('click', secondClick, { once: true })
+		buttonRive.canvas.addEventListener('touchend', secondClick, { once: true })
 	}
 	buttonRive.canvas.addEventListener('click', firstClick, { once: true })
 	buttonRive.canvas.addEventListener('touchend', firstClick, { once: true })

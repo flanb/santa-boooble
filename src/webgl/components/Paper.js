@@ -1,11 +1,11 @@
 import addObjectDebug from '@/webgl/utils/addObjectDebug'
 import { extendMaterial, getUniform, setUniform } from '@/webgl/utils/extendMaterial'
 import Experience from 'core/Experience.js'
-import { Mesh, MeshStandardMaterial, Quaternion, Vector3 } from 'three'
+import { CanvasTexture, Mesh, MeshStandardMaterial, Quaternion, Vector3 } from 'three'
 import gsap from 'gsap'
-import { NearestFilter } from 'three'
 import { RepeatWrapping } from 'three'
 import { displayWriteButton } from '@/scripts/rive'
+import { displayPaperText } from '@/script'
 
 export default class Paper {
 	constructor(parent) {
@@ -39,20 +39,26 @@ export default class Paper {
 		normalMapTexture.wrapS = normalMapTexture.wrapT = RepeatWrapping
 		const roughnessTexture = this.resources.items.paperRoughnessTexture
 
+		const canvasTexture = new CanvasTexture(document.getElementById('paper'))
+		canvasTexture.flipY = false
+		window.canvasTexture = canvasTexture
 		this.material = extendMaterial(
 			new MeshStandardMaterial({
 				side: 2,
 				map: colorTexture,
+				color: 0xffffff,
 				normalMap: normalMapTexture,
 				roughnessMap: roughnessTexture,
 			}),
 			{
+				defines: { USE_UV: '' },
 				uniforms: {
 					uTime: { value: 0.3 },
 					posTexture: { value: vatTexture },
 					normalsTexture: { value: normalsTexture },
 					totalFrames: { value: 130 },
 					fps: { value: 60 },
+					textTexture: { value: canvasTexture },
 				},
 				vertexShader: {
 					common: `
@@ -78,6 +84,17 @@ export default class Paper {
                     gl_Position = projectionMatrix * mvPosition;
                 `,
 				},
+				fragmentShader: {
+					common: `
+					#include <common>
+					uniform sampler2D textTexture;
+				`,
+					dithering_fragment: `
+					#include <dithering_fragment>
+					vec4 textColor = texture(textTexture, vUv);
+					gl_FragColor.rgb *= (1. - textColor.rgb *0.9);
+				`,
+				},
 			}
 		)
 
@@ -95,9 +112,8 @@ export default class Paper {
 	play() {
 		this.model.visible = true
 
-		gsap.to('.paper', {
-			duration: 0.5,
-			autoAlpha: 1,
+		gsap.set('.paper-canvas textarea', {
+			display: 'block',
 			delay: 2,
 		})
 
@@ -132,5 +148,9 @@ export default class Paper {
 			y: 0,
 			z: 0,
 		})
+
+		setTimeout(() => {
+			displayPaperText()
+		}, 500)
 	}
 }

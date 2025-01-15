@@ -20,6 +20,9 @@ importers:
       three:
         specifier: ^0.171.0
         version: 0.171.0
+      word-wrapper:
+        specifier: ^1.0.7
+        version: 1.0.7
     devDependencies:
       '@tweakpane/core':
         specifier: ^2.0.5
@@ -844,6 +847,9 @@ packages:
       yaml:
         optional: true
 
+  word-wrapper@1.0.7:
+    resolution: {integrity: sha512-VOPBFCm9b6FyYKQYfn9AVn2dQvdR/YOVFV6IBRA1TBMJWKffvhEX1af6FMGrttILs2Q9ikCRhLqkbY2weW6dOQ==}
+
   wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
 
@@ -1513,6 +1519,8 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
       sass-embedded: 1.83.1
+
+  word-wrapper@1.0.7: {}
 
   wrappy@1.0.2: {}
 
