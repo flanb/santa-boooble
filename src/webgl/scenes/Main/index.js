@@ -50,7 +50,7 @@ export default class Main {
 	update() {
 		if (this.vat) this.vat.update()
 
-		if (this.experience.gimbal.isEnable && this.scene.physicsWorld) {
+		if (this.experience?.gimbal?.isEnable && this.scene.physicsWorld) {
 			//change gravity
 			const gravity = new RAPIER.Vector3(-this.experience.gimbal.yaw * 5, -9.81, 0)
 

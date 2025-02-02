@@ -1,5 +1,4 @@
-import { EventType } from '@rive-app/canvas'
-import { Rive } from '@rive-app/canvas'
+import { Rive, EventType } from '@rive-app/canvas'
 import { gsap } from 'gsap'
 import { pushItTitle } from './title'
 import { lerp } from 'three/src/math/MathUtils'
@@ -89,7 +88,9 @@ function createButton() {
 		onLoad: () => {
 			// Ensure the drawing surface matches the canvas size and device pixel ratio
 			buttonRive.resizeDrawingSurfaceToCanvas()
-			buttonRive.setTextRunValue('label', 'Break this !!')
+			requestAnimationFrame(() => {
+				buttonRive.setTextRunValue('label', 'Break this !!')
+			})
 
 			gsap.set(buttonRive.canvas, {
 				autoAlpha: 0,
