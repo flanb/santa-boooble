@@ -54,7 +54,7 @@ export function setProgress(progress) {
 function waveProgressTick() {
 	waveElement.style.setProperty(
 		'--wave-progress',
-		lerp(waveElement.style.getPropertyValue('--wave-progress'), targetWaveProgress, 0.1)
+		lerp(waveElement.style.getPropertyValue('--wave-progress'), targetWaveProgress, 0.1),
 	)
 
 	if (waveElement.style.getPropertyValue('--wave-progress') < 0.99) {
@@ -72,7 +72,7 @@ function waveProgressTick() {
 }
 requestAnimationFrame(waveProgressTick)
 
-export let breakMode = false
+export let breakMode = true
 
 export function toggleBreakMode(value) {
 	breakMode = value

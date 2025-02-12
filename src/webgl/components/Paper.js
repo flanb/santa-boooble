@@ -12,22 +12,21 @@ export default class Paper {
 		this.experience = new Experience()
 		this.scene = this.experience.scene
 		this.resources = this.scene.resources
+		this.parent = parent
 
 		this.#createModel()
-		this.#createMaterial()
+		// this.#createMaterial()
 		if (this.experience.debug.active) this.#createDebug()
 	}
 
 	#createModel() {
-		this.model = this.resources.items.paperModel.scene.clone()
+		this.model = this.resources.items.paperModel.scene.children[0].clone()
 		this.model.name = 'paper'
 		this.model.class = this
+		this.model.rotation.y = Math.PI / 2
+		this.model.position.set(-0.1, 0.25, 0)
 
-		this.scene.add(this.model)
-
-		requestAnimationFrame(() => {
-			this.model.visible = false
-		})
+		this.parent.model.add(this.model)
 	}
 
 	#createMaterial() {
@@ -64,9 +63,9 @@ export default class Paper {
 					common: `
                     #include <common>
                     attribute vec2 uv1;
-                    uniform float uTime; 
-                    uniform float totalFrames; 
-                    uniform float fps; 
+                    uniform float uTime;
+                    uniform float totalFrames;
+                    uniform float fps;
                     uniform sampler2D posTexture;
                     uniform sampler2D normalsTexture;
                 `,
@@ -95,7 +94,7 @@ export default class Paper {
 					gl_FragColor.rgb *= (1. - textColor.rgb *0.9);
 				`,
 				},
-			}
+			},
 		)
 
 		this.model.traverseVisible((child) => {
@@ -110,47 +109,30 @@ export default class Paper {
 	}
 
 	play() {
-		this.model.visible = true
-
-		gsap.set('.paper-canvas textarea', {
-			display: 'block',
-			delay: 2,
-		})
-
-		gsap.to(this.material.userData.shader.uniforms.uTime, {
-			duration: 129 / 60,
-			value: 129 / 60,
-			delay: 0.5,
-		})
-
 		let z = 0
 		if (this.experience.sizes.width < 768) {
 			z = this.experience.camera.instance.position.z - 6
 		} else {
 			z = this.experience.camera.instance.position.z - 3
 		}
-		// model get close to the camera
+		this.scene.attach(this.model)
 		gsap.to(this.model.position, {
 			duration: 2,
 			ease: 'power2.inOut',
 			z,
-			x: -0.55,
-			y: -0.5,
+			x: 0,
+			y: -0.25,
 			onComplete: () => {
-				displayWriteButton()
+				// displayWriteButton()
 			},
 		})
 
 		gsap.to(this.model.rotation, {
 			duration: 2,
 			ease: 'power2.inOut',
+			y: Math.PI * 2 + Math.PI / 2,
 			x: 0,
-			y: 0,
 			z: 0,
 		})
-
-		setTimeout(() => {
-			displayPaperText()
-		}, 500)
 	}
 }

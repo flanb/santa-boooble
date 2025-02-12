@@ -109,6 +109,14 @@ export default function addMaterialDebug(folder, material, options = {}) {
 		expanded: options.expanded || false,
 	})
 
+	// requestAnimationFrame(() => {
+	// 	if (material.userData.shader) {
+	// 		console.log('material.userData.shader', material.userData)
+
+	// 		addMaterialDebug(folder, material.userData.shader)
+	// 	}
+	// })
+
 	materialKeys.forEach((key) => {
 		const keyValue = material[key]
 		const materialOption = materialParams[key]

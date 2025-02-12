@@ -9,7 +9,7 @@ setTimeout(() => {
 
 	createCursor()
 	createRive()
-	createTitle()
+	// createTitle()
 
 	const permissionButton = document.querySelector('.permission')
 	if (permissionButton) {

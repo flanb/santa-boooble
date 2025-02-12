@@ -29,7 +29,10 @@
  * @param {ExtendOptions} [options={}] - The options to extend the material with.
  * @returns {Material} The extended material.
  */
-export function extendMaterial(material, { uniforms = {}, vertexShader = {}, fragmentShader = {}, defines = {} } = {}) {
+export function extendMaterial(
+	material,
+	{ uniforms = {}, vertexShader = {}, fragmentShader = {}, defines = {} } = {}
+) {
 	if (!material.userData) material.userData = {}
 	material.userData.uniformsState = {}
 

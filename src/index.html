@@ -1,143 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Threejs Starter</title>
-		<link rel="stylesheet" href="./style.scss" />
-		<script type="module" src="./script.js" defer></script>
-	</head>
-	<body>
-		<noscript>
-			<h1>Enable JavaScript to run this app.</h1>
-		</noscript>
-		<div class="big-title">
-			<p>HEREEEE IT IS</p>
-			<p>RIGHT NOOOW</p>
-			<p class="santa">SANTA BOOOOOOOOOOOBLE</p>
-			<p>PUSH IT...</p>
-			<p>COME ON</p>
-		</div>
-		<canvas id="webgl"></canvas>
-		<canvas id="music_button"></canvas>
-		<canvas id="button"></canvas>
-		<div class="loader-container">
-			<div class="loader-wrapper">
-				<img src="./star.svg" alt="star" class="star1" />
-				<img src="./star.svg" alt="star" class="star2" />
-				<img src="./star.svg" alt="star" class="star3" />
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					xmlns:xlink="http://www.w3.org/1999/xlink"
-					width="101"
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Threejs Starter</title>
+	<link rel="stylesheet" href="./style.scss" />
+	<script type="module" src="./script.js" defer></script>
+</head>
+<body>
+<noscript>
+	<h1>Enable JavaScript to run this app.</h1>
+</noscript>
+<div class="big-title">
+	<p>HEREEEE IT IS</p>
+	<p>RIGHT NOOOW</p>
+	<p class="santa">SANTA BOOOOOOOOOOOBLE</p>
+	<p>PUSH IT...</p>
+	<p>COME ON</p>
+</div>
+<canvas id="webgl"></canvas>
+<canvas id="music_button"></canvas>
+<canvas id="button"></canvas>
+<div class="loader-container">
+	<div class="loader-wrapper">
+		<img src="./star.svg" alt="star" class="star1" />
+		<img src="./star.svg" alt="star" class="star2" />
+		<img src="./star.svg" alt="star" class="star3" />
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			xmlns:xlink="http://www.w3.org/1999/xlink"
+			width="128"
+			height="128"
+			class="loader-svg"
+		>
+			<defs>
+				<path fill-rule="evenodd" clip-rule="evenodd" id="b"
+							d="M3.53523 22.8739C1.08136 23.4405 -0.448637 25.889 0.117884 28.3428L15.5855 95.3405C16.152 97.7944 18.6005 99.3244 21.0544 98.7579L119.622 76.0018C122.076 75.4353 123.606 72.9868 123.039 70.5329L107.571 3.53524C107.005 1.08136 104.556 -0.448638 102.103 0.117883L3.53523 22.8739ZM34.4266 48.1624C33.9645 46.1606 31.869 33.4309 43.2127 30.812C49.5638 29.3457 54.7336 31.411 58.018 33.7493C59.945 30.2078 63.6862 26.0852 70.0374 24.6189C81.3811 22 85.078 34.36 85.5402 36.3618C85.5628 36.4596 85.5996 36.5958 85.6462 36.7682C86.5531 40.1235 91.1798 57.2399 67.2485 73.7314C38.5101 69.3997 35.1652 51.9875 34.5095 48.5742C34.4758 48.3987 34.4492 48.2602 34.4266 48.1624Z"
+							fill="#000" />
+			</defs>
+			<g clip-path="url(#a)">
+				<mask
+					id="c"
+					width="128"
 					height="128"
-					class="loader-svg"
+					x="0"
+					y="0"
+					maskUnits="userSpaceOnUse"
+					style="mask-type: alpha"
 				>
-					<defs>
+					<use xlink:href="#b" />
+				</mask>
+				<g mask="url(#c)">
+					<use xlink:href="#b" />
+					<mask
+						id="d"
+						width="294"
+						height="151"
+						x="1"
+						y="-23"
+						maskUnits="userSpaceOnUse"
+						style="mask-type: alpha"
+					>
 						<path
-							id="b"
-							fill="#2C2C2C"
-							d="M40.77 28.98a10.31 10.31 0 0 0-9.43-7.94 11.8 11.8 0 1 0-7.6 2.71 10.32 10.32 0 0 0-1.6 13.3 50 50 0 0 0 48.64 86.76 49.99 49.99 0 0 0-30-94.83Z"
+							class="wave"
+							fill="#fff"
+							d="M1-23v151h294V-23C253.6-23 253.6-.34 221.5-.34S189.38-23 148-23C106.6-23 106.6-.34 74.5-.34S42.38-23 1-23Z"
 						/>
-					</defs>
-					<g clip-path="url(#a)">
-						<mask
-							id="c"
-							width="101"
-							height="128"
-							x="0"
-							y="0"
-							maskUnits="userSpaceOnUse"
-							style="mask-type: alpha"
-						>
-							<use xlink:href="#b" />
-						</mask>
-						<g mask="url(#c)">
-							<use xlink:href="#b" />
-							<mask
-								id="d"
-								width="294"
-								height="151"
-								x="1"
-								y="-23"
-								maskUnits="userSpaceOnUse"
-								style="mask-type: alpha"
-							>
-								<path
-									class="wave"
-									fill="#fff"
-									d="M1-23v151h294V-23C253.6-23 253.6-.34 221.5-.34S189.38-23 148-23C106.6-23 106.6-.34 74.5-.34S42.38-23 1-23Z"
-								/>
-							</mask>
-							<g mask="url(#d)">
-								<circle
-									cx="50.93"
-									cy="78.2"
-									r="50.2"
-									fill="#F10000"
-									transform="rotate(-28 50.93 78.2)"
-								/>
-								<circle
-									cx="31.52"
-									cy="33.52"
-									r="12.96"
-									fill="#FFBF00"
-									transform="rotate(-28 31.52 33.52)"
-								/>
-								<path
-									fill="#FFBF00"
-									fill-rule="evenodd"
-									d="M29.68 18.66a8.91 8.91 0 0 0 .87-12.57 8.91 8.91 0 0 0-12.57-.99 8.91 8.91 0 0 0-.86 12.57 8.91 8.91 0 0 0 12.56 1Zm2 2.33A11.97 11.97 0 0 0 32.85 4.1a11.97 11.97 0 0 0-16.87-1.32 11.97 11.97 0 0 0-1.16 16.88 11.97 11.97 0 0 0 16.86 1.33Z"
-									clip-rule="evenodd"
-								/>
-								<path
-									fill="#fff"
-									d="M30.55 6.09a8.91 8.91 0 0 1-.87 12.57 8.91 8.91 0 0 1-12.56-.99 8.91 8.91 0 0 1 .86-12.57 8.91 8.91 0 0 1 12.57.99Z"
-								/>
-							</g>
-						</g>
+					</mask>
+					<g mask="url(#d)">
+						<path fill-rule="evenodd" clip-rule="evenodd"
+									d="M3.53523 22.8739C1.08136 23.4405 -0.448637 25.889 0.117884 28.3428L15.5855 95.3405C16.152 97.7944 18.6005 99.3244 21.0544 98.7579L119.622 76.0018C122.076 75.4353 123.606 72.9868 123.039 70.5329L107.571 3.53524C107.005 1.08136 104.556 -0.448638 102.103 0.117883L3.53523 22.8739ZM34.4266 48.1624C33.9645 46.1606 31.869 33.4309 43.2127 30.812C49.5638 29.3457 54.7336 31.411 58.018 33.7493C59.945 30.2078 63.6862 26.0852 70.0374 24.6189C81.3811 22 85.078 34.36 85.5402 36.3618C85.5628 36.4596 85.5996 36.5958 85.6462 36.7682C86.5531 40.1235 91.1798 57.2399 67.2485 73.7314C38.5101 69.3997 35.1652 51.9875 34.5095 48.5742C34.4758 48.3987 34.4492 48.2602 34.4266 48.1624Z"
+									fill="#F10000" />
+
 					</g>
-					<defs>
-						<clipPath id="a"><path fill="#fff" d="M.91.16h100v127.78H.91z" /></clipPath>
-					</defs>
-				</svg>
-			</div>
-		</div>
-		<div class="cursor-container">
-			<img draggable="false" src="cursor.svg" alt="cursor" class="cursor" />
-			<svg
-				class="cursor-hover"
-				width="50"
-				height="50"
-				viewBox="-5 -5 90 90"
-				fill="none"
-				xmlns="http://www.w3.org/2000/svg"
-			>
-				<path
-					d="M71.4869 39.7674C71.4869 57.2858 57.2853 71.4874 39.7669 71.4874C22.2484 71.4874 8.04688 57.2858 8.04688 39.7674C8.04688 22.2489 22.2484 8.04736 39.7669 8.04736C57.2853 8.04736 71.4869 22.2489 71.4869 39.7674Z"
-					fill="#FFBF00"
-				/>
-				<path
-					d="M39.7007 32.2943C40.7559 30.6694 43.2739 31.3441 43.3753 33.2789L43.4714 35.113C43.5167 35.9783 44.1141 36.7159 44.951 36.9402L46.725 37.4155C48.5965 37.917 48.7329 40.5202 46.9241 41.2145L45.2095 41.8727C44.4006 42.1832 43.8837 42.9793 43.929 43.8445L44.0251 45.6786C44.1265 47.6134 41.6928 48.5476 40.4736 47.0419L39.3178 45.6146C38.7725 44.9413 37.8556 44.6956 37.0467 45.0061L35.3321 45.6643C33.5234 46.3586 31.8828 44.3327 32.938 42.7079L33.9383 41.1676C34.4102 40.4409 34.3605 39.493 33.8153 38.8196L32.6595 37.3923C31.4402 35.8866 32.86 33.7004 34.7314 34.2018L36.5054 34.6772C37.3423 34.9014 38.2285 34.5613 38.7004 33.8346L39.7007 32.2943Z"
-					fill="black"
-				/>
-				<circle
-					cx="39.7674"
-					cy="39.7674"
-					r="38.457"
-					stroke="#FFBF00"
-					stroke-width="2.6208"
-					stroke-linejoin="round"
-				/>
-			</svg>
-		</div>
-		<div class="paper-canvas">
-			<textarea maxlength="150"></textarea>
-			<input type="text" maxlength="50" />
-			<canvas id="paper"></canvas>
-		</div>
-		<div class="permission-container">
-			<button class="permission">permission button</button>
-		</div>
-	</body>
+				</g>
+			</g>
+			<defs>
+				<clipPath id="a">
+					<path fill-rule="evenodd" clip-rule="evenodd"
+								d="M3.53523 22.8739C1.08136 23.4405 -0.448637 25.889 0.117884 28.3428L15.5855 95.3405C16.152 97.7944 18.6005 99.3244 21.0544 98.7579L119.622 76.0018C122.076 75.4353 123.606 72.9868 123.039 70.5329L107.571 3.53524C107.005 1.08136 104.556 -0.448638 102.103 0.117883L3.53523 22.8739ZM34.4266 48.1624C33.9645 46.1606 31.869 33.4309 43.2127 30.812C49.5638 29.3457 54.7336 31.411 58.018 33.7493C59.945 30.2078 63.6862 26.0852 70.0374 24.6189C81.3811 22 85.078 34.36 85.5402 36.3618C85.5628 36.4596 85.5996 36.5958 85.6462 36.7682C86.5531 40.1235 91.1798 57.2399 67.2485 73.7314C38.5101 69.3997 35.1652 51.9875 34.5095 48.5742C34.4758 48.3987 34.4492 48.2602 34.4266 48.1624Z"
+								fill="#fff" />
+				</clipPath>
+			</defs>
+		</svg>
+	</div>
+</div>
+<div class="cursor-container">
+	<img draggable="false" src="cursor.svg" alt="cursor" class="cursor" />
+	<svg
+		class="cursor-hover"
+		width="50"
+		height="50"
+		viewBox="-5 -5 90 90"
+		fill="none"
+		xmlns="http://www.w3.org/2000/svg"
+	>
+		<path
+			d="M71.4869 39.7674C71.4869 57.2858 57.2853 71.4874 39.7669 71.4874C22.2484 71.4874 8.04688 57.2858 8.04688 39.7674C8.04688 22.2489 22.2484 8.04736 39.7669 8.04736C57.2853 8.04736 71.4869 22.2489 71.4869 39.7674Z"
+			fill="#FF3131"
+		/>
+		<path
+			d="M15.6364 26.9974C-0.535457 20.604 0.709671 9.78597 0.709671 8.61774C0.709671 7.44857 1.17734 0.121796 7.80261 0.121796C11.5122 0.121796 14.1146 1.92906 15.6364 3.64624C17.1582 1.92906 19.7605 0.121796 23.4701 0.121796C30.0954 0.121796 30.5631 7.44857 30.5631 8.61774C30.5631 9.78597 31.8082 20.604 15.6364 26.9974Z"
+			fill="white" transform="translate(26 30) scale(0.9)" />
+
+		<circle
+			cx="39.7674"
+			cy="39.7674"
+			r="38.457"
+			stroke="#FF3131"
+			stroke-width="2.6208"
+			stroke-linejoin="round"
+		/>
+	</svg>
+</div>
+<div class="paper-canvas">
+	<textarea maxlength="150"></textarea>
+	<input type="text" maxlength="50" />
+	<canvas id="paper"></canvas>
+</div>
+<div class="permission-container">
+	<button class="permission">permission button</button>
+</div>
+</body>
 </html>

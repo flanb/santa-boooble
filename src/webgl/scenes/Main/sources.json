@@ -17,6 +17,14 @@
 		"path": "textures/ball_normal.webp"
 	},
 	{
+		"name": "armaModel",
+		"path": "models/arma.glb"
+	},
+	{
+		"name": "armaPositionTexture",
+		"path": "textures/arma_offsets.exr"
+	},
+	{
 		"name": "ballColorTexture",
 		"path": "textures/ball_color.webp",
 		"colorSpace": "srgb"
@@ -65,7 +73,7 @@
 	},
 	{
 		"name": "paperModel",
-		"path": "models/paper.glb"
+		"path": "models/letter.glb"
 	},
 	{
 		"name": "paperPositionTexture",
@@ -87,5 +95,17 @@
 	{
 		"name": "paperRoughnessTexture",
 		"path": "textures/paper_roughness.webp"
+	},
+	{
+		"name": "goldColorTexture",
+		"path": "textures/Gold_BaseColor.webp"
+	},
+	{
+		"name": "goldNormalTexture",
+		"path": "textures/Gold_Normal.webp"
+	},
+	{
+		"name": "goldRoughnessTexture",
+		"path": "textures/Gold_Roughness.webp"
 	}
 ]

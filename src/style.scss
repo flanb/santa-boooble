@@ -56,7 +56,7 @@ body {
 	user-select: none;
 	translate: -50% -50%;
 	transition: scale 0.1s;
-	animation: cursor 5s infinite linear;
+	//animation: cursor 5s infinite linear;
 }
 .cursor-hover {
 	display: none;
@@ -164,22 +164,22 @@ body {
 	}
 
 	.star1 {
-		top: -65px;
-		left: 60px;
-		rotate: 10deg;
+		top: -20px;
+		left: 141px;
+		rotate: 24deg;
 	}
 
 	.star2 {
-		scale: 0.8;
-		top: -40px;
+		scale: 0.6;
+		top: 72px;
 		left: -45px;
-		rotate: 50deg;
+		rotate: 331deg;
 	}
 	.star3 {
 		scale: 0.5;
-		top: 50px;
-		left: -70px;
-		rotate: -15deg;
+		top: 20px;
+		left: 152px;
+		rotate: 75deg;
 	}
 
 	.loader-svg {
@@ -221,10 +221,10 @@ body {
 		rotate: 0;
 	}
 	50% {
-		scale: 1.1;
+		scale: 1.2;
 	}
 	to {
-		rotate: 40deg;
+		rotate: 30deg;
 		scale: 0;
 	}
 }

@@ -2,7 +2,7 @@ import addObjectDebug from '@/webgl/utils/addObjectDebug'
 import { extendMaterial, getUniform, setUniform } from '@/webgl/utils/extendMaterial'
 import RAPIER from '@dimforge/rapier3d-compat'
 import Experience from 'core/Experience.js'
-import { Mesh, MeshStandardMaterial, Quaternion, Vector3 } from 'three'
+import { Group, Mesh, MeshPhysicalMaterial, MeshStandardMaterial, Quaternion, Vector3 } from 'three'
 import Paper from '../Paper'
 import { breakMode } from '@/scripts/rive'
 import { toggleHoverCursor } from '@/scripts/cursor'
@@ -23,11 +23,21 @@ export default class VAT {
 	}
 
 	#createModel() {
-		this.model = this.resources.items.ballModel.scene.clone()
-		this.model.name = 'ball'
+		this.model = new Group()
+		this.ballModel = this.resources.items.ballModel.scene.children[0].clone()
+		this.ballModel.name = 'ball'
+		this.ballModel.rotation.y = Math.PI / 2
+		this.ballModel.position.set(-0.1, -1.6, 0)
+		this.model.add(this.ballModel)
 
-		this.holder = this.resources.items.holderModel.scene.clone()
-		this.model.add(this.holder)
+		this.armaModel = this.resources.items.armaModel.scene.children[0].clone()
+		this.model.add(this.armaModel)
+		this.armaModel.name = 'arma'
+		this.armaModel.rotation.y = Math.PI / 2
+		this.armaModel.position.set(-0.1, -1.61, 0)
+
+		// this.holder = this.resources.items.holderModel.scene.clone()
+		// this.model.add(this.holder)
 
 		/**
 		 * @type {Mesh}
@@ -40,26 +50,31 @@ export default class VAT {
 	#createMaterial() {
 		const vatTexture = this.resources.items.ballPositionTexture
 		const normalTexture = this.resources.items.ballNormalTexture
+		normalTexture.flipY = false
 		const colorTexture = this.resources.items.ballColorTexture
 		const roughnessTexture = this.resources.items.ballRoughnessTexture
 		const displacementTexture = this.resources.items.ballDisplacementTexture
 
 		this.material = extendMaterial(
-			new MeshStandardMaterial({
+			new MeshPhysicalMaterial({
 				side: 2,
-				map: colorTexture,
-				metalness: 1,
-				roughnessMap: roughnessTexture,
-				normalMap: normalTexture,
-				normalScale: new Vector3(10, 10),
-				displacementMap: displacementTexture,
+				color: 0xff6e72,
+				transmission: 1,
+				opacity: 1,
+				metalness: 0.4,
+				roughness: 0.1,
+				ior: 1.5,
+				thickness: 0.4,
+				dispersion: 0.5,
+				// normalMap: normalTexture,
+				// roughnessMap: roughnessTexture,
 			}),
 			{
 				uniforms: {
-					uTime: { value: 0.0067 },
+					uTime: { value: 0.017 },
 					posTexture: { value: vatTexture },
-					totalFrames: { value: 60 },
-					fps: { value: 60 },
+					totalFrames: { value: 30 },
+					fps: { value: 30 },
 				},
 				vertexShader: {
 					common: `
@@ -71,10 +86,10 @@ export default class VAT {
 					uniform sampler2D posTexture;
 				`,
 					project_vertex: `
-					float frame = (mod(uTime * fps, totalFrames-12. ) + 12.) / totalFrames ;
+					float frame = (mod(uTime * fps, totalFrames )) / totalFrames ;
 
 					// get the position from the texture
-					float numWraps = 8.;
+					float numWraps = 6.;
 					vec4 texturePos = texture(posTexture, vec2(uv1.x, 1. - uv1.y + (1. - frame) / numWraps));
 					// translate the position
 					vec4 translated = vec4(position + texturePos.xzy, 1.0);
@@ -82,7 +97,49 @@ export default class VAT {
 					gl_Position = projectionMatrix * mvPosition;
 				`,
 				},
-			}
+			},
+		)
+		const armaPosTexture = this.resources.items.armaPositionTexture
+		const armaRoughnessTexture = this.resources.items.goldRoughnessTexture
+		const armaNormalTexture = this.resources.items.goldNormalTexture
+		const armaColorTexture = this.resources.items.goldColorTexture
+
+		this.armaMaterial = extendMaterial(
+			new MeshStandardMaterial({
+				map: armaColorTexture,
+				normalMap: armaNormalTexture,
+				roughnessMap: armaRoughnessTexture,
+				metalness: 1,
+			}),
+			{
+				uniforms: {
+					uTime: { value: 0.017 },
+					posTexture: { value: armaPosTexture },
+					totalFrames: { value: 30 },
+					fps: { value: 30 },
+				},
+				vertexShader: {
+					common: `
+					#include <common>
+					attribute vec2 uv1;
+					uniform float uTime;
+					uniform float totalFrames;
+					uniform float fps;
+					uniform sampler2D posTexture;
+				`,
+					project_vertex: `
+					float frame = (mod(uTime * fps, totalFrames )) / totalFrames ;
+
+					// get the position from the texture
+					float numWraps = 10.;
+					vec4 texturePos = texture(posTexture, vec2(uv1.x, 1. - uv1.y + (1. - frame) / numWraps));
+					// translate the position
+					vec4 translated = vec4(position + texturePos.xzy, 1.0);
+					vec4 mvPosition = modelViewMatrix * translated;
+					gl_Position = projectionMatrix * mvPosition;
+				`,
+				},
+			},
 		)
 
 		const holderNormalTexture = this.resources.items.holderNormalTexture
@@ -98,10 +155,12 @@ export default class VAT {
 
 		this.model.traverse((child) => {
 			if (child.isMesh) {
-				if (child.name === 'export_mesh') {
+				if (child.name === 'ball') {
 					child.material = this.material
 				} else if (child.name === 'gold_mesh') {
 					child.material = holderMaterial
+				} else if (child.name === 'arma') {
+					child.material = this.armaMaterial
 				}
 			}
 		})
@@ -154,38 +213,56 @@ export default class VAT {
 		this.model.removeEventListener('click', this.#playAnim)
 
 		const paper = this.scene.getObjectByName('paper')
-		paper.position.copy(this.model.position)
-		paper.quaternion.copy(this.model.quaternion)
+		// paper.position.copy(this.model.position)
+		// paper.quaternion.copy(this.model.quaternion)
 		paper.class.play()
+
+		this.scene.attach(this.ballModel)
+		this.scene.attach(this.armaModel)
+		// this.ballModel.rotation.set(0, 0, 0)
+		// this.armaModel.rotation.set(0, 0, 0)
+
+		gsap.to([this.ballModel.rotation, this.armaModel.rotation], {
+			x: 0,
+			z: 0,
+			duration: 0.75,
+		})
+		gsap.to([this.ballModel.position, this.armaModel.position], {
+			y: '-=1',
+			duration: 1,
+		})
 
 		this.modelBody.setEnabledRotations(false, true, true)
 
-		const totalFrames = getUniform(this.material, 'totalFrames').value - 15
+		const totalFrames = getUniform(this.material, 'totalFrames').value - 1
 		const fps = getUniform(this.material, 'fps').value
+
 		const duration = totalFrames / fps
 
-		gsap.to(getUniform(this.material, 'uTime'), {
+		gsap.to([getUniform(this.material, 'uTime'), getUniform(this.armaMaterial, 'uTime')], {
 			value: duration,
-			duration: 3,
+			ease: 'none',
+			duration: 1,
 		})
 
-		// const startTime = this.experience.time.elapsed
-		// const animate = () => {
-		// 	const elapsedTime = (this.experience.time.elapsed - startTime) / 2000
-		// 	setUniform(this.material, 'uTime', elapsedTime)
-		// 	if (elapsedTime < duration) {
-		// 		requestAnimationFrame(animate)
-		// 	}
-		// }
-		// requestAnimationFrame(animate)
+		const value = this.baseBody.translation()
+		gsap.to(value, {
+			y: '+=2',
+			duration: 5,
+			delay: 2,
+			ease: 'power2.inOut',
+			onUpdate: () => {
+				this.baseBody.setTranslation(value)
+			},
+		})
 	}
 
 	#createPhysics() {
-		const baseBody = this.scene.physicsWorld.createRigidBody(
-			RAPIER.RigidBodyDesc.fixed().setTranslation(0, 3, 0)
+		this.baseBody = this.scene.physicsWorld.createRigidBody(
+			RAPIER.RigidBodyDesc.fixed().setTranslation(0, 3, 0),
 		)
 
-		const wireBody = this.scene.physicsWorld.createRigidBody(
+		this.wireBody = this.scene.physicsWorld.createRigidBody(
 			RAPIER.RigidBodyDesc.dynamic()
 				.setRotation({
 					x: this.wireModel.quaternion.x,
@@ -193,7 +270,7 @@ export default class VAT {
 					z: this.wireModel.quaternion.z,
 					w: this.wireModel.quaternion.w,
 				})
-				.setTranslation(0, 3, 0)
+				.setTranslation(0, 3, 0),
 		)
 		const wireShape = RAPIER.ColliderDesc.cuboid(0.3, 0.5, 0.1)
 			.setRotation({
@@ -205,8 +282,8 @@ export default class VAT {
 			.setTranslation(0, 1, 0)
 			.setMass(1)
 
-		this.scene.physicsWorld.createCollider(wireShape, wireBody)
-		this.scene.dynamicBodies.set(this.wireModel, wireBody)
+		this.scene.physicsWorld.createCollider(wireShape, this.wireBody)
+		this.scene.dynamicBodies.set(this.wireModel, this.wireBody)
 
 		const lastBone = this.wireModel.getObjectByName('Bone005')
 		const lastBoneQuat = new Quaternion()
@@ -220,7 +297,7 @@ export default class VAT {
 					z: lastBoneQuat.z,
 					w: lastBoneQuat.w,
 				})
-				.setTranslation(2, 2, 0)
+				.setTranslation(2, 2, 0),
 		)
 
 		const lastBoneShape = RAPIER.ColliderDesc.cuboid(0.3, 0.2, 0.1)
@@ -243,10 +320,10 @@ export default class VAT {
 			isMobile
 				? RAPIER.RigidBodyDesc.dynamic()
 				: RAPIER.RigidBodyDesc.dynamic()
-						.setTranslation(4, 4, 0)
-						.setRotation({ x: 0, y: 0, z: 0.8, w: 0.6 })
+						.setTranslation(3, 3, 0)
+						.setRotation({ x: 0, y: 0, z: 0.8, w: 0.6 }),
 		)
-		const modelShape = RAPIER.ColliderDesc.ball(1).setTranslation(-0.1, -0.2, 0).setMass(1)
+		const modelShape = RAPIER.ColliderDesc.ball(1).setTranslation(0, 0.2, 0).setMass(1)
 		/**
 		 * @type {RAPIER.Collider}
 		 */
@@ -254,33 +331,41 @@ export default class VAT {
 		this.scene.dynamicBodies.set(this.model, this.modelBody)
 
 		//joints
-		const baseJoint = RAPIER.JointData.revolute(
+		this.baseJoint = RAPIER.JointData.revolute(
 			{ x: 0, y: 0.5, z: 0 },
 			{ x: 0, y: 0, z: 0 },
-			{ x: 0, y: 0, z: 1 }
+			{ x: 0, y: 0, z: 1 },
 		)
 
-		const baseImp = this.scene.physicsWorld.createImpulseJoint(baseJoint, baseBody, wireBody)
+		this.baseImp = this.scene.physicsWorld.createImpulseJoint(
+			this.baseJoint,
+			this.baseBody,
+			this.wireBody,
+		)
 
 		const boneJoint = RAPIER.JointData.revolute(
 			{ x: 0, y: 1.4, z: 0 },
 			{ x: 0, y: -0.6, z: 0 },
-			{ x: 0, y: 0, z: 1 }
+			{ x: 0, y: 0, z: 1 },
 		)
-		const wireImp = this.scene.physicsWorld.createImpulseJoint(boneJoint, wireBody, lastBoneBody)
+		const wireImp = this.scene.physicsWorld.createImpulseJoint(
+			boneJoint,
+			this.wireBody,
+			lastBoneBody,
+		)
 
 		const ballJoint = RAPIER.JointData.revolute(
 			{ x: 0, y: 0.6, z: 0 },
 			{ x: -0.1, y: 1.33, z: 0 },
-			{ x: 0, y: 0, z: 1 }
+			{ x: 0, y: 0, z: 1 },
 		)
 		const ballImp = this.scene.physicsWorld.createImpulseJoint(
 			ballJoint,
 			lastBoneBody,
-			this.modelBody
+			this.modelBody,
 		)
 
-		baseImp.configureMotorVelocity(0, 1e2)
+		this.baseImp.configureMotorVelocity(0, 1e2)
 		// wireImp.configureMotorVelocity(0, 1e2)
 		wireImp.setLimits(-1, 1)
 		ballImp.configureMotorVelocity(0, 1e1)
@@ -291,12 +376,12 @@ export default class VAT {
 		if (isMobile) {
 			// create wall collider
 			const wallBody = this.scene.physicsWorld.createRigidBody(
-				RAPIER.RigidBodyDesc.fixed().setTranslation(-bounds.x / 2 - 3, 0, 0)
+				RAPIER.RigidBodyDesc.fixed().setTranslation(-bounds.x / 2 - 3, 0, 0),
 			)
 			const wallShape = RAPIER.ColliderDesc.cuboid(1, 10, 1).setTranslation(0, 0, 0)
 			this.scene.physicsWorld.createCollider(wallShape, wallBody)
 			const wallBody2 = this.scene.physicsWorld.createRigidBody(
-				RAPIER.RigidBodyDesc.fixed().setTranslation(bounds.x / 2 + 3, 0, 0)
+				RAPIER.RigidBodyDesc.fixed().setTranslation(bounds.x / 2 + 3, 0, 0),
 			)
 			const wallShape2 = RAPIER.ColliderDesc.cuboid(1, 10, 1).setTranslation(0, 0, 0)
 			this.scene.physicsWorld.createCollider(wallShape2, wallBody2)
@@ -334,7 +419,7 @@ export default class VAT {
 	}
 
 	#createDebug() {
-		// const debugFolder = addObjectDebug(this.experience.debug.ui, this.model)
+		const debugFolder = addObjectDebug(this.experience.debug.ui, this.model)
 	}
 
 	update() {

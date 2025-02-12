@@ -139,7 +139,7 @@ export default class Resources extends EventEmitter {
 					(file) => this.sourceLoaded(source, file),
 					undefined,
 					(error) =>
-						console.error(`Error loading ${extension} ${source.path}. Does the file exist?`, error)
+						console.error(`Error loading ${extension} ${source.path}. Does the file exist?`, error),
 				)
 			} else {
 				console.error(`${source.path} is not a valid source type`)
@@ -161,7 +161,7 @@ export default class Resources extends EventEmitter {
 			console.debug(
 				`%c🖼️ ${source.name}%c loaded in ${source.loadTime}ms. (${this.loaded}/${this.toLoad})`,
 				'font-weight: bold',
-				'font-weight: normal'
+				'font-weight: normal',
 			)
 		setProgress(this.loaded / this.toLoad)
 		if (this.loadingScreenElement) {
@@ -180,7 +180,7 @@ export default class Resources extends EventEmitter {
 				this.trigger('ready')
 
 				gsap.to('.loader-container', { autoAlpha: 0, duration: 1, ease: 'power1.in' })
-			}, 1100)
+			}, 1000)
 		}
 	}
 }

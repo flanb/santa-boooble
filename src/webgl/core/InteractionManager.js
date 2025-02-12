@@ -98,8 +98,11 @@ export default class InteractionManager {
 
 		intersects.forEach((intersect) => {
 			const object = this.interactiveObjects.find(
-				(obj) => obj.children.includes(intersect.object) || obj === intersect.object
+				(obj) => {
+					return obj.children.includes(intersect.object) || obj === intersect.object
+				}
 			)
+
 			if (object && !this.intersectsObjects.includes(object)) {
 				this.intersectsObjects.push(object)
 				if (!object.isHovered) {

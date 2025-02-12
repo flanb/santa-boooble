@@ -35,7 +35,7 @@ export default class Main {
 		this.scene.physicsWorld = new RAPIER.World(gravity)
 
 		const groundBody = this.scene.physicsWorld.createRigidBody(
-			RAPIER.RigidBodyDesc.fixed().setTranslation(0, 6, 0)
+			RAPIER.RigidBodyDesc.fixed().setTranslation(0, 6, 0),
 		)
 		const groundShape = RAPIER.ColliderDesc.cuboid(10, 1, 10)
 		this.scene.physicsWorld.createCollider(groundShape, groundBody)
@@ -84,7 +84,7 @@ export default class Main {
 			// this.lines.clear()
 			// this.lines.geometry.setAttribute(
 			// 	'position',
-			// 	new BufferAttribute(new Float32Array(vertices), 3)
+			// 	new BufferAttribute(new Float32Array(vertices), 3),
 			// )
 			// this.lines.geometry.setAttribute('color', new BufferAttribute(new Float32Array(colors), 3))
 		}

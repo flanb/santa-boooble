@@ -70,6 +70,7 @@ export default async function createTitle() {
 					if (before === titles[currentTitle].innerHTML) {
 						clearInterval(interval)
 						displayButton()
+						console.log('displayButton')
 					}
 				}, 100)
 			},
