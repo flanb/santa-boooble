@@ -4,8 +4,6 @@ import Experience from 'core/Experience.js'
 import { CanvasTexture, Mesh, MeshStandardMaterial, Quaternion, Vector3 } from 'three'
 import gsap from 'gsap'
 import { RepeatWrapping } from 'three'
-import { displayWriteButton } from '@/scripts/rive'
-import { displayPaperText } from '@/script'
 
 export default class Paper {
 	constructor(parent) {
@@ -24,7 +22,7 @@ export default class Paper {
 		this.model.name = 'paper'
 		this.model.class = this
 		this.model.rotation.y = Math.PI / 2
-		this.model.position.set(-0.1, 0.25, 0)
+		this.model.position.set(0, 2.1, 0)
 
 		this.parent.model.add(this.model)
 	}

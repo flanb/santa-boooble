@@ -2,8 +2,16 @@ import addObjectDebug from '@/webgl/utils/addObjectDebug'
 import { extendMaterial, getUniform, setUniform } from '@/webgl/utils/extendMaterial'
 import RAPIER from '@dimforge/rapier3d-compat'
 import Experience from 'core/Experience.js'
-import { Group, Mesh, MeshPhysicalMaterial, MeshStandardMaterial, Quaternion, Vector3 } from 'three'
-import Paper from '../Paper'
+import {
+	Euler,
+	Group,
+	Mesh,
+	MeshPhysicalMaterial,
+	MeshStandardMaterial,
+	Quaternion,
+	Vector2,
+	Vector3,
+} from 'three'
 import { breakMode } from '@/scripts/rive'
 import { toggleHoverCursor } from '@/scripts/cursor'
 import { comeOnTitle } from '@/scripts/title'
@@ -27,14 +35,14 @@ export default class VAT {
 		this.ballModel = this.resources.items.ballModel.scene.children[0].clone()
 		this.ballModel.name = 'ball'
 		this.ballModel.rotation.y = Math.PI / 2
-		this.ballModel.position.set(-0.1, -1.6, 0)
+		this.ballModel.position.set(0, 0.2, 0)
 		this.model.add(this.ballModel)
 
 		this.armaModel = this.resources.items.armaModel.scene.children[0].clone()
 		this.model.add(this.armaModel)
 		this.armaModel.name = 'arma'
 		this.armaModel.rotation.y = Math.PI / 2
-		this.armaModel.position.set(-0.1, -1.61, 0)
+		this.armaModel.position.set(0, 0.2, 0)
 
 		// this.holder = this.resources.items.holderModel.scene.clone()
 		// this.model.add(this.holder)
@@ -320,10 +328,16 @@ export default class VAT {
 			isMobile
 				? RAPIER.RigidBodyDesc.dynamic()
 				: RAPIER.RigidBodyDesc.dynamic()
-						.setTranslation(3, 3, 0)
+						.setTranslation(2, 2, 0)
 						.setRotation({ x: 0, y: 0, z: 0.8, w: 0.6 }),
 		)
-		const modelShape = RAPIER.ColliderDesc.ball(1).setTranslation(0, 0.2, 0).setMass(1)
+		const geometry = this.ballModel.geometry.clone()
+		geometry.rotateY(Math.PI / 2)
+
+		const modelShape = RAPIER.ColliderDesc.convexHull(geometry.attributes.position.array)
+			.setTranslation(0, 0.2, 0)
+			.setMass(1)
+		// .setRotation(new Quaternion().setFromEuler(new Euler(0, Math.PI / 2, 0)))
 		/**
 		 * @type {RAPIER.Collider}
 		 */
@@ -356,7 +370,7 @@ export default class VAT {
 
 		const ballJoint = RAPIER.JointData.revolute(
 			{ x: 0, y: 0.6, z: 0 },
-			{ x: -0.1, y: 1.33, z: 0 },
+			{ x: 0, y: 3.14, z: 0 },
 			{ x: 0, y: 0, z: 1 },
 		)
 		const ballImp = this.scene.physicsWorld.createImpulseJoint(
@@ -370,8 +384,8 @@ export default class VAT {
 		wireImp.setLimits(-1, 1)
 		ballImp.configureMotorVelocity(0, 1e1)
 
-		const bounds = new Vector3()
-		this.experience.camera.instance.getViewSize(10, bounds)
+		const bounds = new Vector2()
+		this.experience.camera.instance.getViewSize(8, bounds)
 
 		if (isMobile) {
 			// create wall collider
@@ -390,7 +404,7 @@ export default class VAT {
 		}
 
 		const mouseBody = this.scene.physicsWorld.createRigidBody(RAPIER.RigidBodyDesc.fixed())
-		const mouseShape = RAPIER.ColliderDesc.ball(0.1)
+		const mouseShape = RAPIER.ColliderDesc.ball(0.1).setTranslation(0, 0.2, 0)
 		this.mouseCollider = this.scene.physicsWorld.createCollider(mouseShape, mouseBody)
 		this.mouseCollider.setEnabled(false)
 
@@ -414,7 +428,7 @@ export default class VAT {
 
 			const vector = new Vector3(x * (bounds.x / 2), y * (bounds.y / 2) - 0.5, 0)
 
-			mouseBody.setTranslation(vector)
+			mouseBody.setTranslation(vector, true)
 		})
 	}
 

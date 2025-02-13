@@ -20,6 +20,9 @@ importers:
       three:
         specifier: ^0.172.0
         version: 0.172.0
+      three-msdf-text-utils:
+        specifier: ^1.1.7
+        version: 1.1.7(three@0.172.0)
       word-wrapper:
         specifier: ^1.0.7
         version: 1.0.7
@@ -362,6 +365,9 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
+  an-array@1.0.0:
+    resolution: {integrity: sha512-M175GYI7RmsYu24Ok383yZQa3eveDfNnmhTe3OQ3bm70bEovz2gWenH+ST/n32M8lrwLWk74hcPds5CDRPe2wg==}
+
   astring@1.9.0:
     resolution: {integrity: sha512-LElXdjswlqjWrPpJFg1Fx4wpkOCxj1TDHlSV4PlaRxHGWko024xICaa97ZkMfs6DRKlCguiAI+rbXv5GWwXIkg==}
     hasBin: true
@@ -387,6 +393,10 @@ packages:
 
   core-util-is@1.0.3:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
+
+  dtype@2.0.0:
+    resolution: {integrity: sha512-s2YVcLKdFGS0hpFqJaTwscsyt0E8nNFdmo73Ocd81xNPj4URI4rj6D60A+vFMIw7BXWlb4yRkEwfBqcZzPGiZg==}
+    engines: {node: '>= 0.8.0'}
 
   duplexify@3.7.1:
     resolution: {integrity: sha512-07z8uv2wMyS51kKhD1KsdXJg5WQ6t93RneqRxUHnskXVtlYYkLqM0gqStQZ3pj073g687jPCHrqNfCzawLYh5g==}
@@ -508,6 +518,9 @@ packages:
   inherits@2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
 
+  is-buffer@1.1.6:
+    resolution: {integrity: sha512-NcdALwpXkTm5Zvvbk7owOUSvVvBKDgKP5/ewfXEznmQFfs4ZRmanOeKBTjRVjka3QFoN6XJ+9F3USqfHqTaU5w==}
+
   is-core-module@2.16.1:
     resolution: {integrity: sha512-UfoeMA6fIJ8wTYFEUjelnaGI67v6+N7qXJEvQuIGa99l4xsCruSYOVSQ0uPANn4dAzm8lkYPaKLrrijLq7x23w==}
     engines: {node: '>= 0.4'}
@@ -567,6 +580,9 @@ packages:
 
   process-nextick-args@2.0.1:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
+
+  quad-indices@2.0.1:
+    resolution: {integrity: sha512-6jtmCsEbGAh5npThXrBaubbTjPcF0rMbn57XCJVI7LkW8PUT56V+uIrRCCWCn85PSgJC9v8Pm5tnJDwmOBewvA==}
 
   readable-stream@1.0.34:
     resolution: {integrity: sha512-ok1qVCJuRkNmvebYikljxJA/UEsKwLl2nI1OmaqAu4/UE+h0wKCHok4XkL/gvi39OacXvw59RJUOFUkDib2rHg==}
@@ -773,6 +789,11 @@ packages:
   sync-message-port@1.1.3:
     resolution: {integrity: sha512-GTt8rSKje5FilG+wEdfCkOcLL7LWqpMlr2c3LRuKt/YXxcJ52aGSbGBAdI4L3aaqfrBt6y711El53ItyH1NWzg==}
     engines: {node: '>=16.0.0'}
+
+  three-msdf-text-utils@1.1.7:
+    resolution: {integrity: sha512-wnK349KJlDmq3eH76VD62xC+Hz6z2/7ql9mztrc7qgsXpwyxHrzOsftBUxwNBxTLEzXUvnWcSkpvjcrAThJ1Wg==}
+    peerDependencies:
+      three: '>= 0.129.0'
 
   three@0.172.0:
     resolution: {integrity: sha512-6HMgMlzU97MsV7D/tY8Va38b83kz8YJX+BefKjspMNAv0Vx6dxMogHOrnRl/sbMIs3BPUKijPqDqJ/+UwJbIow==}
@@ -1047,6 +1068,8 @@ snapshots:
 
   acorn@7.4.1: {}
 
+  an-array@1.0.0: {}
+
   astring@1.9.0: {}
 
   bl@2.2.1:
@@ -1070,6 +1093,8 @@ snapshots:
       typedarray: 0.0.6
 
   core-util-is@1.0.3: {}
+
+  dtype@2.0.0: {}
 
   duplexify@3.7.1:
     dependencies:
@@ -1241,6 +1266,8 @@ snapshots:
 
   inherits@2.0.4: {}
 
+  is-buffer@1.1.6: {}
+
   is-core-module@2.16.1:
     dependencies:
       hasown: 2.0.2
@@ -1290,6 +1317,12 @@ snapshots:
       source-map-js: 1.2.1
 
   process-nextick-args@2.0.1: {}
+
+  quad-indices@2.0.1:
+    dependencies:
+      an-array: 1.0.0
+      dtype: 2.0.0
+      is-buffer: 1.1.6
 
   readable-stream@1.0.34:
     dependencies:
@@ -1481,6 +1514,12 @@ snapshots:
       sync-message-port: 1.1.3
 
   sync-message-port@1.1.3: {}
+
+  three-msdf-text-utils@1.1.7(three@0.172.0):
+    dependencies:
+      quad-indices: 2.0.1
+      three: 0.172.0
+      word-wrapper: 1.0.7
 
   three@0.172.0: {}
 

@@ -2,7 +2,6 @@ import { Rive, EventType } from '@rive-app/canvas'
 import { gsap } from 'gsap'
 import { pushItTitle } from './title'
 import { lerp } from 'three/src/math/MathUtils'
-import { displayCursorInput, displayCursorTextarea, updatePaperCanvas } from '@/script'
 
 export default function createRive() {
 	createMusic()
@@ -72,7 +71,7 @@ function waveProgressTick() {
 }
 requestAnimationFrame(waveProgressTick)
 
-export let breakMode = true
+export let breakMode = false
 
 export function toggleBreakMode(value) {
 	breakMode = value
@@ -89,15 +88,15 @@ function createButton() {
 			// Ensure the drawing surface matches the canvas size and device pixel ratio
 			buttonRive.resizeDrawingSurfaceToCanvas()
 			requestAnimationFrame(() => {
-				buttonRive.setTextRunValue('label', 'Break this !!')
+				buttonRive.setTextRunValue('label', 'Someone is looking for you, open it')
 			})
 
-			gsap.set(buttonRive.canvas, {
-				autoAlpha: 0,
-			})
+			// gsap.set(buttonRive.canvas, {
+			// 	autoAlpha: 0,
+			// })
 
 			const click = () => {
-				pushItTitle()
+				// pushItTitle()
 
 				// setTimeout(() => {
 				// 	buttonRive.stateMachineInputs('State Machine 1')[1].value = false

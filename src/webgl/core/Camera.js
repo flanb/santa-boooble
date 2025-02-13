@@ -37,7 +37,7 @@ export default class Camera {
 
 		if (debugCameraPosition) {
 			camera.position.copy(
-				new Vector3(debugCameraPosition.x, debugCameraPosition.y, debugCameraPosition.z)
+				new Vector3(debugCameraPosition.x, debugCameraPosition.y, debugCameraPosition.z),
 			)
 		} else {
 			camera.position.copy(this.options.position)
@@ -47,7 +47,7 @@ export default class Camera {
 			camera.lookAt(new Vector3(debugCameraTarget.x, debugCameraTarget.y, debugCameraTarget.z))
 			if (camera.controls?.target)
 				camera.controls.target.copy(
-					new Vector3(debugCameraTarget.x, debugCameraTarget.y, debugCameraTarget.z)
+					new Vector3(debugCameraTarget.x, debugCameraTarget.y, debugCameraTarget.z),
 				)
 		} else {
 			camera.lookAt(this.options.target)
@@ -59,7 +59,7 @@ export default class Camera {
 			this.options.fov,
 			this.sizes.width / this.sizes.height,
 			this.options.frustum.min,
-			this.options.frustum.max
+			this.options.frustum.max,
 		)
 		this.sceneCamera.position.copy(this.options.position)
 		this.sceneCamera.lookAt(this.options.target)
@@ -79,7 +79,7 @@ export default class Camera {
 			sessionStorage.setItem('debugCameraPosition', JSON.stringify(this.controlsCamera.position))
 			sessionStorage.setItem(
 				'debugCameraTarget',
-				JSON.stringify(this.controlsCamera.controls.target)
+				JSON.stringify(this.controlsCamera.controls.target),
 			)
 		})
 
@@ -240,7 +240,7 @@ export default class Camera {
 		if (this.fpsCamera) {
 			this.fpsCamera.controls.removeEventListener(
 				'change',
-				this.fpsCamera.controls._listeners.change[0]
+				this.fpsCamera.controls._listeners.change[0],
 			)
 			this.fpsCamera.controls.dispose()
 			this.canvas.removeEventListener('click', this.fpsCamera.controls.lockControls)

@@ -6,6 +6,7 @@ import Resources from 'core/Resources.js'
 import { BufferAttribute, BufferGeometry, LineBasicMaterial, LineSegments, Mesh } from 'three'
 import sources from './sources.json'
 import Paper from '@/webgl/components/Paper'
+import Text from 'components/Text.js'
 
 export default class Main {
 	constructor() {
@@ -22,6 +23,7 @@ export default class Main {
 			this.environment = new Environment()
 			this.vat = new VAT()
 			this.paper = new Paper(this.vat)
+			this.text = new Text()
 		})
 	}
 

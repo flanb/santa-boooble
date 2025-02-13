@@ -1,10 +1,15 @@
 @font-face {
-	font-family: 'Lineal';
-	src: url(/fonts/Lineal-Black.woff2) format('woff2');
+	font-family: 'Pangaia';
+	src: url(/fonts/PPPangaia-Medium.woff2) format('woff2');
+}
+@font-face {
+	font-family: 'Pangaia';
+	src: url(/fonts/PPPangaia-MediumItalic.woff2) format('woff2');
+	font-style: italic;
 }
 
 :root {
-	--title-font: 'Lineal', sans-serif;
+	--title-font: 'Pangaia', serif;
 	--body-font: 'Roboto', sans-serif;
 	--background-gradient: linear-gradient(to top right, #ecd4c6 0%, #e8e5e3 47%, #ecd4c6 100%);
 }
@@ -317,4 +322,14 @@ body {
 	#paper {
 		visibility: hidden;
 	}
+}
+h1 {
+	position: fixed;
+	top: 32px;
+	left: 50%;
+	transform: translateX(-50%);
+	color: black;
+	font-family: var(--title-font), serif;
+	z-index: 1;
+
 }
