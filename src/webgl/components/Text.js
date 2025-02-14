@@ -128,10 +128,12 @@ export default class Text {
 											y: 4,
 											duration: 1,
 											ease: 'power2.in',
-										})
-										gsap.to('.finish', {
-											autoAlpha: 1,
-											duration: 0.5,
+											onComplete: () => {
+												gsap.to('.finish', {
+													autoAlpha: 1,
+													duration: 1,
+												})
+											},
 										})
 									},
 									{ once: true },
