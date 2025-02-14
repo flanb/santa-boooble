@@ -1,7 +1,6 @@
 import Experience from 'core/Experience.js'
 import createCursor from './scripts/cursor'
 import createRive from './scripts/rive'
-import createTitle from './scripts/title'
 import wordWrapper from 'word-wrapper'
 import gsap from 'gsap'
 
@@ -22,6 +21,9 @@ setTimeout(() => {
 	}
 })
 
+gsap.set(document.body, {
+	background: 'radial-gradient(circle, rgb(255, 50, 50) -200%, rgb(255, 255, 255) 80%)',
+})
 const paperContent = document.querySelector('.paper .content')
 const paperAuthor = document.querySelector('.paper .author')
 //

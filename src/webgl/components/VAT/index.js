@@ -14,7 +14,6 @@ import {
 } from 'three'
 import { breakMode } from '@/scripts/rive'
 import { toggleHoverCursor } from '@/scripts/cursor'
-import { comeOnTitle } from '@/scripts/title'
 import gsap from 'gsap'
 
 export default class VAT {
@@ -201,11 +200,30 @@ export default class VAT {
 			this.modelBody.applyImpulse(new RAPIER.Vector3(0, 0, -5), true)
 			if (!breakMode) return
 			breakCount++
+			//radial gradient in center increasing
+			if (breakCount === 1) {
+				gsap.to(document.body, {
+					duration: 1,
+					background: 'radial-gradient(circle, rgb(255, 50, 50) -100%, rgb(255, 255, 255) 80%)',
+				})
+			}
 			if (breakCount === 2) {
-				comeOnTitle()
+				gsap.to(document.body, {
+					duration: 1,
+					background: 'radial-gradient(circle,rgb(255, 50, 50) 0%, rgb(255, 255, 255) 80%)',
+				})
 			}
 			if (breakCount === 3) {
+				gsap.to(document.body, {
+					duration: 1,
+					background: 'radial-gradient(circle, rgb(255, 50, 50) 5%, rgb(255, 255, 255) 80%)',
+				})
 				this.#playAnim()
+				gsap.to(document.body, {
+					delay: 2,
+					duration: 4,
+					background: 'radial-gradient(circle,rgb(255, 50, 50) -100%, rgb(255, 255, 255) 80%)',
+				})
 			}
 		})
 		this.model.addEventListener('mouseenter', () => {
@@ -251,6 +269,11 @@ export default class VAT {
 			value: duration,
 			ease: 'none',
 			duration: 1,
+			onComplete: () => {
+				//delete arma model and ball model
+				this.scene.remove(this.ballModel)
+				this.scene.remove(this.armaModel)
+			},
 		})
 
 		const value = this.baseBody.translation()
@@ -428,7 +451,7 @@ export default class VAT {
 				return
 			}
 
-			this.mouseCollider.setEnabled(true)
+			// this.mouseCollider.setEnabled(true)
 			const x = (event.clientX / window.innerWidth) * 2 - 1
 			const y = -(event.clientY / window.innerHeight) * 2 + 1
 

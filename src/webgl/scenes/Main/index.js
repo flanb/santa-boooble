@@ -14,6 +14,7 @@ export default class Main {
 		this.scene = this.experience.scene
 		this.scene.resources = new Resources(sources)
 		this.scene.enablePhysics = true
+		this.scene.enableMouseCollider = this.enableMouseCollider
 
 		this.#initScene()
 	}
@@ -42,6 +43,9 @@ export default class Main {
 		)
 		const groundShape = RAPIER.ColliderDesc.cuboid(10, 1, 10)
 		this.scene.physicsWorld.createCollider(groundShape, groundBody)
+		setTimeout(() => {
+			this.scene.enablePhysics = false
+		}, 3000)
 
 		setInterval(() => {
 			if (!this.scene.enablePhysics) return
@@ -49,6 +53,10 @@ export default class Main {
 				this.scene.physicsWorld.step()
 			})
 		}, 1000 / 60)
+	}
+
+	enableMouseCollider = () => {
+		this.vat.mouseCollider.setEnabled(true)
 	}
 
 	update() {

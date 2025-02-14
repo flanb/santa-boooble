@@ -17,6 +17,7 @@ import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader'
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js'
 import { setProgress } from '@/scripts/rive'
 import gsap from 'gsap'
+import { createTitle } from '@/scripts/title.js'
 
 export default class Resources extends EventEmitter {
 	constructor(sources) {
@@ -180,6 +181,7 @@ export default class Resources extends EventEmitter {
 				this.trigger('ready')
 
 				gsap.to('.loader-container', { autoAlpha: 0, duration: 1, ease: 'power1.in' })
+				createTitle()
 			}, 1000)
 		}
 	}

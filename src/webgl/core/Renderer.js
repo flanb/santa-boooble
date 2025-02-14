@@ -16,7 +16,7 @@ export default class Renderer {
 		this.instance = new WebGLRenderer({
 			canvas: this.canvas,
 			powerPreference: 'high-performance',
-			// alpha: true,
+			alpha: true,
 			antialias: true,
 		})
 		this.instance.outputColorSpace = SRGBColorSpace
@@ -24,7 +24,7 @@ export default class Renderer {
 		this.instance.toneMappingExposure = 1.75
 		// this.instance.shadowMap.enabled = true
 		// this.instance.shadowMap.type = PCFSoftShadowMap
-		this.instance.setClearColor('#fff')
+		this.instance.setClearColor('#fff', 0)
 		this.instance.setSize(this.sizes.width, this.sizes.height)
 		this.instance.setPixelRatio(Math.min(this.sizes.pixelRatio, 2))
 	}

@@ -124,7 +124,7 @@ export default class Paper {
 		if (this.experience.sizes.width < 768) {
 			z = this.experience.camera.instance.position.z - 6
 		} else {
-			z = this.experience.camera.instance.position.z - 3
+			z = this.experience.camera.instance.position.z - 2
 		}
 		this.scene.attach(this.model)
 		gsap.to(this.model.position, {
@@ -210,12 +210,12 @@ export default class Paper {
 			duration: 2,
 			delay: 0.1,
 		})
-		gsap.to(this.letterMesh.position, {
-			z: '+=1',
-			duration: 1,
-			delay: 1.5,
-			ease: 'power2.inOut',
-		})
+		// gsap.to(this.letterMesh.position, {
+		// 	z: '+=1',
+		// 	duration: 1,
+		// 	delay: 1.5,
+		// 	ease: 'power2.inOut',
+		// })
 
 		window.flyLetter = this.fly
 	}
@@ -231,5 +231,6 @@ export default class Paper {
 			ease: 'power2.in',
 			z: Math.PI / 4,
 		})
+		window.air()
 	}
 }

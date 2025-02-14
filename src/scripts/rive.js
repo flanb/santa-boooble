@@ -16,6 +16,7 @@ function handleButton() {
 		'click',
 		() => {
 			breakMode = true
+			window.shatter()
 			gsap.to(primaryButton, {
 				autoAlpha: 0,
 				duration: 0.5,
