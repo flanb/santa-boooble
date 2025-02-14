@@ -13,6 +13,7 @@ export default class Main {
 		this.experience = new Experience()
 		this.scene = this.experience.scene
 		this.scene.resources = new Resources(sources)
+		this.scene.enablePhysics = true
 
 		this.#initScene()
 	}
@@ -43,6 +44,7 @@ export default class Main {
 		this.scene.physicsWorld.createCollider(groundShape, groundBody)
 
 		setInterval(() => {
+			if (!this.scene.enablePhysics) return
 			requestAnimationFrame(() => {
 				this.scene.physicsWorld.step()
 			})

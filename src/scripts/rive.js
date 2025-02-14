@@ -1,11 +1,28 @@
 import { Rive, EventType } from '@rive-app/canvas'
 import { gsap } from 'gsap'
-import { pushItTitle } from './title'
 import { lerp } from 'three/src/math/MathUtils'
 
 export default function createRive() {
 	createMusic()
-	createButton()
+	// createButton()
+	handleButton()
+}
+
+function handleButton() {
+	const primaryButton = document.querySelector('.primary-button')
+	const secondaryButton = document.querySelector('.secondary-button')
+
+	primaryButton.addEventListener(
+		'click',
+		() => {
+			breakMode = true
+			gsap.to(primaryButton, {
+				autoAlpha: 0,
+				duration: 0.5,
+			})
+		},
+		{ once: true },
+	)
 }
 
 function createMusic() {
@@ -88,7 +105,7 @@ function createButton() {
 			// Ensure the drawing surface matches the canvas size and device pixel ratio
 			buttonRive.resizeDrawingSurfaceToCanvas()
 			requestAnimationFrame(() => {
-				buttonRive.setTextRunValue('label', 'Someone is looking for you, open it')
+				// buttonRive.setTextRunValue('label', 'Someone is looking for you, open it')
 			})
 
 			// gsap.set(buttonRive.canvas, {

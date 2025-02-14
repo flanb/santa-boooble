@@ -262,6 +262,9 @@ export default class VAT {
 			onUpdate: () => {
 				this.baseBody.setTranslation(value)
 			},
+			onComplete: () => {
+				this.scene.enablePhysics = false
+			},
 		})
 	}
 
@@ -278,7 +281,8 @@ export default class VAT {
 					z: this.wireModel.quaternion.z,
 					w: this.wireModel.quaternion.w,
 				})
-				.setTranslation(0, 3, 0),
+				.setTranslation(0, 3, 0)
+				.setCanSleep(false),
 		)
 		const wireShape = RAPIER.ColliderDesc.cuboid(0.3, 0.5, 0.1)
 			.setRotation({
@@ -305,7 +309,8 @@ export default class VAT {
 					z: lastBoneQuat.z,
 					w: lastBoneQuat.w,
 				})
-				.setTranslation(2, 2, 0),
+				.setTranslation(2, 2, 0)
+				.setCanSleep(false),
 		)
 
 		const lastBoneShape = RAPIER.ColliderDesc.cuboid(0.3, 0.2, 0.1)
@@ -326,10 +331,11 @@ export default class VAT {
 		 */
 		this.modelBody = this.scene.physicsWorld.createRigidBody(
 			isMobile
-				? RAPIER.RigidBodyDesc.dynamic()
+				? RAPIER.RigidBodyDesc.dynamic().setCanSleep(false)
 				: RAPIER.RigidBodyDesc.dynamic()
 						.setTranslation(2, 2, 0)
-						.setRotation({ x: 0, y: 0, z: 0.8, w: 0.6 }),
+						.setRotation({ x: 0, y: 0, z: 0.8, w: 0.6 })
+						.setCanSleep(false),
 		)
 		const geometry = this.ballModel.geometry.clone()
 		geometry.rotateY(Math.PI / 2)

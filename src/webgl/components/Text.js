@@ -37,7 +37,7 @@ export default class Text {
 		context.font = 'italic 100px Pangaia'
 		context.textAlign = 'center'
 		context.textBaseline = 'middle'
-		context.letterSpacing = '-4px'
+		context.letterSpacing = '-2px'
 
 		const text = wordWrapper("Love isn't something you find, it's something that finds you.", {
 			width: 24,
